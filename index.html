@@ -1,0 +1,2955 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Мир Попугаев 🦜</title>
+
+<!-- ===== PWA: يجعل الصفحة قابلة للتثبيت كتطبيق هاتف ===== -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0b3d91">
+
+<!-- دعم iOS (Safari) ليفتح كتطبيق كامل الشاشة بدون شريط المتصفح -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="vaza❤️">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+<!-- دعم Android/Chrome -->
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<style>
+  :root{
+    --sky-top:#0b3d91;
+    --sky-mid:#1e6fd9;
+    --sky-low:#5fb6e8;
+    --cloud:#eaf6ff;
+    --gold:#ffd166;
+    --gold-deep:#e8a13a;
+    --leaf:#2fa84f;
+    --leaf-deep:#1f7a38;
+    --card-bg:rgba(10,30,60,0.55);
+    --card-border:rgba(255,255,255,0.18);
+    --ink:#0b1e33;
+    --paper:#fff8ea;
+    font-family: 'Baloo 2','Segoe UI',Tahoma,sans-serif;
+  }
+  @font-face{
+    font-family:'Baloo 2';
+    src: local('Arial');
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent; user-select:none;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+    background:#08234a;
+    touch-action:none;
+    font-family:'Baloo 2','Segoe UI',Tahoma,sans-serif;
+  }
+  #app{
+    position:fixed; inset:0; width:100%; height:100%;
+    overflow:hidden;
+  }
+  .screen{
+    position:absolute; inset:0; width:100%; height:100%;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+  .screen.active{display:flex;}
+
+  /* ---------- Home Screen ---------- */
+  #home-bg{
+    position:absolute; inset:0; width:100%; height:100%;
+  }
+  #home-content{
+    position:relative; z-index:5;
+    width:100%; height:100%;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:flex-end;
+    padding:0 0 5vh 0;
+  }
+  .game-title{
+    margin-top:6vh;
+    font-size:clamp(28px,7.5vw,46px);
+    color:#fff;
+    text-shadow:0 3px 0 #0b3d91, 0 6px 14px rgba(0,0,0,0.35);
+    letter-spacing:1px;
+    text-align:center;
+    font-weight:800;
+    position:relative;
+    z-index:5;
+  }
+  .game-sub{
+    color:#eaf6ff;
+    font-size:clamp(13px,3.6vw,16px);
+    margin-top:4px;
+    text-shadow:0 2px 6px rgba(0,0,0,0.35);
+    position:relative; z-index:5;
+    text-align:center;
+    padding:0 24px;
+  }
+  .menu-cards{
+    width:100%;
+    max-width:460px;
+    padding:0 20px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    position:relative;
+    z-index:5;
+  }
+  .menu-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--card-bg);
+    border:1.5px solid var(--card-border);
+    backdrop-filter: blur(6px);
+    border-radius:22px;
+    padding:14px 16px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .menu-card:active{transform:scale(0.96);}
+  .menu-icon{
+    width:56px; height:56px; flex:0 0 56px;
+    border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px;
+  }
+  .menu-icon.run{background:linear-gradient(145deg,#3fc76a,#1f7a38);}
+  .menu-icon.care{background:linear-gradient(145deg,#ffd166,#e8a13a);}
+  .menu-text{flex:1; text-align:left;}
+  .menu-text h3{margin:0; font-size:17px; color:#fff; font-weight:800;}
+  .menu-text p{margin:2px 0 0; font-size:12.5px; color:#dbe9ff;}
+  .menu-arrow{color:#fff; font-size:20px; opacity:0.8;}
+
+  .coin-badge{
+    position:absolute; top:calc(14px + env(safe-area-inset-top)); left:14px;
+    z-index:6;
+    background:rgba(10,30,60,0.6);
+    border:1.5px solid rgba(255,209,102,0.5);
+    color:#ffd166;
+    padding:7px 14px 7px 10px;
+    border-radius:999px;
+    font-weight:800;
+    font-size:14px;
+    display:flex; align-items:center; gap:6px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  .streak-badge{
+    position:absolute; top:calc(14px + env(safe-area-inset-top)); right:14px;
+    z-index:6;
+    background:rgba(10,30,60,0.6);
+    border:1.5px solid rgba(255,138,56,0.55);
+    color:#ffb238;
+    padding:7px 14px 7px 10px;
+    border-radius:999px;
+    font-weight:800;
+    font-size:14px;
+    display:flex; align-items:center; gap:6px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.25);
+    cursor:pointer;
+  }
+
+  /* Decorative flying clouds/parrots on home screen */
+  .decor-parrot{
+    position:absolute;
+    z-index:3;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+  }
+
+  /* ---------- Generic back button ---------- */
+  .back-btn{
+    position:absolute; top:calc(14px + env(safe-area-inset-top)); right:14px;
+    z-index:50;
+    width:42px; height:42px;
+    border-radius:50%;
+    background:rgba(10,30,60,0.6);
+    border:1.5px solid rgba(255,255,255,0.25);
+    color:#fff; font-size:20px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .back-btn:active{transform:scale(0.9);}
+
+  canvas{display:block;}
+
+  /* ---------- Runner Game ---------- */
+  #runner-screen{background:linear-gradient(#bfe6ff,#eaf7ff);}
+  #runnerCanvas{width:100%;height:100%;}
+  .runner-hud{
+    position:absolute; top:calc(10px + env(safe-area-inset-top)); left:0; right:0;
+    z-index:20;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:0 14px;
+    pointer-events:none;
+  }
+  .hud-pill{
+    background:rgba(255,255,255,0.85);
+    border-radius:999px;
+    padding:6px 14px;
+    font-weight:800;
+    color:#0b3d91;
+    font-size:14px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.15);
+    display:flex; align-items:center; gap:6px;
+  }
+  #runner-tap-hint{
+    position:absolute; bottom:14vh; left:0; right:0; text-align:center;
+    color:#0b3d91; opacity:0.65; font-size:13px; font-weight:700;
+    z-index:15; pointer-events:none;
+  }
+  #runner-gameover{
+    position:absolute; inset:0; z-index:40;
+    display:none; align-items:center; justify-content:center;
+    background:rgba(8,20,40,0.55);
+  }
+  #runner-gameover.show{display:flex;}
+  .go-card{
+    background:var(--paper);
+    border-radius:26px;
+    padding:26px 24px;
+    width:min(86vw,340px);
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.35);
+  }
+  .go-card h2{margin:0 0 4px; color:#0b3d91; font-size:22px;}
+  .go-card .go-score{font-size:15px; color:#3a4a5f; margin-bottom:14px;}
+  .go-card .go-score b{color:#e8a13a; font-size:19px;}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    border:none; border-radius:16px; padding:13px 18px;
+    font-size:15px; font-weight:800; cursor:pointer;
+    width:100%;
+    box-shadow:0 6px 0 rgba(0,0,0,0.15);
+  }
+  .btn:active{transform:translateY(3px); box-shadow:0 3px 0 rgba(0,0,0,0.15);}
+  .btn-primary{background:linear-gradient(145deg,#3fc76a,#1f7a38); color:#fff;}
+  .btn-secondary{background:linear-gradient(145deg,#eee,#ccc); color:#333; margin-top:10px;}
+  .btn-gold{background:linear-gradient(145deg,#ffd166,#e8a13a); color:#5b3a00;}
+
+  /* Shop / skins */
+  #shop-panel, #care-shop-panel{
+    position:absolute; inset:0; z-index:45;
+    display:none; align-items:flex-end; justify-content:center;
+    background:rgba(8,20,40,0.5);
+  }
+  #shop-panel.show, #care-shop-panel.show{display:flex;}
+  .shop-sheet{
+    background:var(--paper);
+    width:100%; max-width:520px;
+    border-radius:26px 26px 0 0;
+    padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+    max-height:78vh;
+    overflow-y:auto;
+  }
+  .shop-sheet h3{margin:0 0 4px; color:#0b3d91; text-align:center;}
+  .shop-sub{text-align:center; color:#7a8aa0; font-size:12.5px; margin-bottom:14px;}
+  .skin-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+  }
+  .skin-item{
+    background:#fff; border-radius:16px; padding:10px 6px;
+    text-align:center; border:2px solid transparent;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .skin-item.selected{border-color:#3fc76a;}
+  .skin-item.locked{opacity:0.55;}
+  .skin-swatch{width:44px; height:44px; border-radius:50%;}
+  .skin-price{font-size:11.5px; color:#e8a13a; font-weight:800;}
+  .skin-name{font-size:11.5px; color:#0b3d91; font-weight:700;}
+  .skin-btn{
+    margin-top:2px; font-size:11px; padding:5px 8px; border-radius:10px;
+    border:none; font-weight:800; cursor:pointer; width:100%;
+  }
+  .skin-btn.buy{background:#3fc76a; color:#fff;}
+  .skin-btn.use{background:#eaf6ff; color:#0b3d91;}
+  .skin-btn.owned{background:#0b3d91; color:#fff;}
+
+  /* ---------- Daily reward / streak modal ---------- */
+  #daily-panel{
+    position:absolute; inset:0; z-index:60;
+    display:none; align-items:center; justify-content:center;
+    background:rgba(8,20,40,0.6);
+  }
+  #daily-panel.show{display:flex;}
+  .daily-sheet{
+    background:var(--paper); width:92%; max-width:420px;
+    border-radius:24px; padding:20px 16px calc(18px + env(safe-area-inset-bottom));
+    text-align:center;
+  }
+  .daily-sheet h3{margin:0 0 4px; color:#0b3d91;}
+  .daily-sub{color:#7a8aa0; font-size:12.5px; margin-bottom:14px;}
+  .daily-row{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:16px;}
+  .daily-day{
+    background:#fff; border-radius:12px; padding:8px 2px; font-size:10.5px;
+    color:#0b3d91; font-weight:700; border:2px solid transparent;
+  }
+  .daily-day .dd-icon{font-size:18px; display:block; margin-bottom:3px;}
+  .daily-day.done{background:#eaffef; border-color:#3fc76a;}
+  .daily-day.today{border-color:#ffb238; box-shadow:0 0 0 3px rgba(255,178,56,0.25);}
+  .daily-day.legendary{background:#fff3d6;}
+  .daily-claim-msg{font-size:13px; color:#0b3d91; font-weight:700; margin-bottom:12px; min-height:18px;}
+
+  /* ---------- Quest / mission panel ---------- */
+  #quest-panel{
+    position:absolute; inset:0; z-index:55;
+    display:none; align-items:flex-end; justify-content:center;
+    background:rgba(8,20,40,0.5);
+  }
+  #quest-panel.show{display:flex;}
+  .quest-time-left{
+    text-align:center; font-size:12px; font-weight:800; color:#e8a13a;
+    background:#fff3d6; border-radius:10px; padding:6px 10px; margin-bottom:12px;
+  }
+  .quest-list{display:flex; flex-direction:column; gap:8px;}
+  .quest-item{
+    background:#fff; border-radius:14px; padding:9px 12px;
+    display:flex; align-items:center; gap:9px; border:2px solid transparent;
+  }
+  .quest-item.done{border-color:#3fc76a; background:#eaffef;}
+  .quest-item.diff-hard{box-shadow:inset 3px 0 0 #e85454;}
+  .quest-item.diff-medium{box-shadow:inset 3px 0 0 #ffb238;}
+  .quest-item.diff-easy{box-shadow:inset 3px 0 0 #3fc76a;}
+  .quest-icon{font-size:21px; flex-shrink:0;}
+  .quest-info{flex:1; text-align:right; min-width:0;}
+  .quest-title{font-size:12px; color:#0b3d91; font-weight:700; line-height:1.3;}
+  .quest-diff-tag{
+    display:inline-block; font-size:9.5px; font-weight:800; border-radius:6px;
+    padding:1px 6px; margin:2px 0; color:#fff;
+  }
+  .quest-diff-tag.diff-easy{background:#3fc76a;}
+  .quest-diff-tag.diff-medium{background:#ffb238;}
+  .quest-diff-tag.diff-hard{background:#e85454;}
+  .quest-progress{font-size:10.5px; color:#7a8aa0;}
+  .quest-reward{font-size:11.5px; color:#e8a13a; font-weight:800;}
+  .quest-claim-btn{
+    font-size:10.5px; padding:6px 9px; border-radius:10px; border:none;
+    font-weight:800; cursor:pointer; background:#3fc76a; color:#fff; flex-shrink:0;
+  }
+  .quest-claim-btn:disabled{background:#cfd8e3; color:#8a97a8; cursor:default;}
+
+  /* ---------- Sell parrot confirm panel ---------- */
+  #sell-panel{
+    position:absolute; inset:0; z-index:60;
+    display:none; align-items:center; justify-content:center;
+    background:rgba(8,20,40,0.6);
+  }
+  #sell-panel.show{display:flex;}
+  .sell-sheet{
+    background:var(--paper); width:88%; max-width:380px;
+    border-radius:22px; padding:20px 18px; text-align:center;
+  }
+  .sell-sheet h3{margin:0 0 8px; color:#0b3d91;}
+  .sell-price{font-size:26px; font-weight:900; color:#e8a13a; margin:10px 0;}
+  .sell-breakdown{font-size:11.5px; color:#7a8aa0; margin-bottom:16px; line-height:1.7;}
+
+  /* ---------- Care game ---------- */
+  #care-screen{background:linear-gradient(#dff3ff,#fef9ec);}
+  .care-topbar{
+    position:absolute; top:calc(10px + env(safe-area-inset-top)); left:0; right:0;
+    z-index:20; display:flex; justify-content:center; gap:8px; padding:0 54px;
+    flex-wrap:wrap;
+  }
+  #care-canvas-wrap{
+    position:absolute; inset:0; z-index:1;
+  }
+  .care-toolbar{
+    position:absolute; bottom:0; left:0; right:0; z-index:25;
+    background:rgba(255,248,234,0.92);
+    border-top:2px solid #f0dfb8;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+    display:flex; flex-wrap:wrap; gap:6px; justify-content:center;
+    box-shadow:0 -6px 16px rgba(0,0,0,0.08);
+  }
+  .tool-btn{
+    flex:1 1 22%; max-width:78px; min-width:56px;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:#fff; border:2px solid #eee; border-radius:14px;
+    padding:6px 3px; font-size:9.5px; color:#0b3d91; font-weight:800;
+    cursor:pointer;
+  }
+  .tool-btn.active-tool{border-color:#3fc76a; background:#eafff0;}
+  .tool-btn .ticon{font-size:20px;}
+  #care-info-panel{
+    position:absolute; top:calc(58px + env(safe-area-inset-top)); left:14px; right:14px;
+    z-index:20;
+    background:rgba(255,255,255,0.9);
+    border-radius:16px; padding:8px 14px;
+    font-size:12.5px; color:#5b4a2a; text-align:center;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    display:none;
+  }
+  #care-info-panel.show{display:block;}
+
+  /* Anime-style speech bubble that pops up near the parrot's beak */
+  .speech-bubble{
+    position:absolute;
+    z-index:35;
+    max-width:min(72vw,260px);
+    background:#ffffff;
+    color:#1a1a1a;
+    border:2.5px solid #0b1e33;
+    border-radius:16px;
+    padding:8px 12px;
+    font-size:12.5px;
+    font-weight:700;
+    line-height:1.35;
+    text-align:center;
+    box-shadow:0 6px 14px rgba(0,0,0,0.25);
+    opacity:0;
+    transform:translate(-50%,6px) scale(0.85);
+    transform-origin:center bottom;
+    transition:opacity .16s ease, transform .16s cubic-bezier(.34,1.4,.64,1);
+    pointer-events:none;
+  }
+  .speech-bubble.show{
+    opacity:1;
+    transform:translate(-50%,0) scale(1);
+  }
+  .speech-bubble::after{
+    content:'';
+    position:absolute;
+    left:50%;
+    bottom:-9px;
+    transform:translateX(-50%);
+    width:0; height:0;
+    border-left:9px solid transparent;
+    border-right:9px solid transparent;
+    border-top:9px solid #0b1e33;
+  }
+  .speech-bubble::before{
+    content:'';
+    position:absolute;
+    left:50%;
+    bottom:-6px;
+    transform:translateX(-50%);
+    width:0; height:0;
+    border-left:7px solid transparent;
+    border-right:7px solid transparent;
+    border-top:7px solid #ffffff;
+    z-index:1;
+  }
+
+  #toast{
+    position:absolute; bottom:110px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:rgba(11,30,60,0.9); color:#fff; padding:9px 18px; border-radius:14px;
+    font-size:13px; font-weight:700; z-index:60; opacity:0; pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    white-space:nowrap;
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ HOME SCREEN ============ -->
+  <div class="screen active" id="home-screen">
+    <canvas id="home-bg"></canvas>
+    <div class="coin-badge">🪙 <span id="home-coin-count">0</span></div>
+    <div class="streak-badge" id="streak-badge">🔥 <span id="home-streak-count">0</span></div>
+    <div id="home-content">
+      <div class="game-title">Мир Попугаев 🦜</div>
+      <div class="game-sub">Особенный подарок… маленький след с большими крыльями</div>
+      <div style="flex:1"></div>
+      <div class="menu-cards">
+        <div class="menu-card" id="btn-runner">
+          <div class="menu-icon run">🏃</div>
+          <div class="menu-text">
+            <h3>Прыжки-приключение</h3>
+            <p>Перепрыгивай препятствия и собирай золотые монеты</p>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+        <div class="menu-card" id="btn-care">
+          <div class="menu-icon care">🏡</div>
+          <div class="menu-text">
+            <h3>Ферма попугаев</h3>
+            <p>Заботься о попугае: корми, мой и расширяй ферму</p>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RUNNER SCREEN ============ -->
+  <div class="screen" id="runner-screen">
+    <canvas id="runnerCanvas"></canvas>
+    <div class="back-btn" id="runner-back">✕</div>
+    <div class="runner-hud">
+      <div class="hud-pill">🪙 <span id="runner-coin-hud">0</span></div>
+      <div class="hud-pill">🏆 <span id="runner-best-hud">0</span></div>
+    </div>
+    <div id="runner-tap-hint">Нажмите в любом месте, чтобы прыгнуть</div>
+
+    <div id="runner-gameover">
+      <div class="go-card">
+        <h2>Столкновение! 💥</h2>
+        <div class="go-score">Монет собрано: <b id="go-coins">0</b> 🪙<br>Дистанция: <span id="go-distance">0</span> м<br>Рекорд: <b id="go-best">0</b> м</div>
+        <div id="go-quote" style="font-size:13px;color:#7a5a2e;font-style:italic;margin:-6px 0 14px;padding:0 6px;"></div>
+        <button class="btn btn-primary" id="go-retry">▶ Попробовать снова</button>
+        <button class="btn btn-secondary" id="go-shop">🎨 Магазин расцветок</button>
+        <button class="btn btn-secondary" id="go-home">🏠 Главное меню</button>
+      </div>
+    </div>
+
+    <div id="shop-panel">
+      <div class="shop-sheet">
+        <h3>🎨 Магазин расцветок попугая</h3>
+        <div class="shop-sub">Используйте монеты, чтобы открыть новые цвета</div>
+        <div class="skin-grid" id="skin-grid"></div>
+        <button class="btn btn-secondary" id="shop-close" style="margin-top:14px;">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CARE SCREEN ============ -->
+  <div class="screen" id="care-screen">
+    <div id="care-canvas-wrap"><canvas id="careCanvas"></canvas></div>
+    <div class="speech-bubble" id="care-speech-bubble"></div>
+    <div class="back-btn" id="care-back">✕</div>
+    <div class="care-topbar">
+      <div class="hud-pill" style="background:rgba(255,255,255,0.85);">🪙 <span id="care-coin-hud">0</span></div>
+      <div class="hud-pill" style="background:rgba(255,255,255,0.85);">😊 <span id="care-happy-hud">--</span></div>
+      <div class="hud-pill" style="background:rgba(255,255,255,0.85);">🍽️ <span id="care-hunger-hud">--</span></div>
+    </div>
+    <div id="care-info-panel"></div>
+    <div class="care-toolbar">
+      <div class="tool-btn" data-tool="feed"><div class="ticon">🌾</div>Кормить</div>
+      <div class="tool-btn" data-tool="clean"><div class="ticon">🧽</div>Мыть</div>
+      <div class="tool-btn" data-tool="play"><div class="ticon">🧸</div>Играть</div>
+      <div class="tool-btn" data-tool="pet"><div class="ticon">🖐️</div>Гладить</div>
+      <div class="tool-btn" data-tool="shop"><div class="ticon">🛒</div>Сундук</div>
+      <div class="tool-btn" data-tool="expand"><div class="ticon">➕</div>Попугай</div>
+      <div class="tool-btn" data-tool="quests"><div class="ticon">📜</div>Задания</div>
+      <div class="tool-btn" data-tool="sell"><div class="ticon">💰</div>Продать</div>
+    </div>
+
+    <!-- Dedicated toy shop panel for the care/farm screen (separate from runner's skin shop) -->
+    <div id="care-shop-panel">
+      <div class="shop-sheet">
+        <h3 id="care-shop-title">🛒 Магазин игрушек</h3>
+        <div class="shop-sub" id="care-shop-sub">Купите игрушку, чтобы порадовать попугая</div>
+        <div class="skin-grid" id="care-skin-grid"></div>
+        <button class="btn btn-secondary" id="care-shop-close" style="margin-top:14px;">Закрыть</button>
+      </div>
+    </div>
+
+    <!-- Quests / daily missions panel -->
+    <div id="quest-panel">
+      <div class="shop-sheet">
+        <h3>📜 Еженедельные задания</h3>
+        <div class="shop-sub">30 заданий на неделю — лёгкие, средние и сложные</div>
+        <div class="quest-time-left" id="quest-time-left"></div>
+        <div class="quest-list" id="quest-list"></div>
+        <button class="btn btn-secondary" id="quest-close" style="margin-top:14px;">Закрыть</button>
+      </div>
+    </div>
+
+    <!-- Sell parrot confirmation panel -->
+    <div id="sell-panel">
+      <div class="sell-sheet">
+        <h3>💰 Продать попугая?</h3>
+        <div id="sell-parrot-name" style="font-weight:800; color:#0b3d91; margin-bottom:4px;"></div>
+        <div class="sell-price" id="sell-price">0 🪙</div>
+        <div class="sell-breakdown" id="sell-breakdown"></div>
+        <button class="btn btn-primary" id="sell-confirm">Продать</button>
+        <button class="btn btn-secondary" id="sell-cancel" style="margin-top:8px;">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily login / streak reward panel (shown on top of home screen) -->
+  <div id="daily-panel">
+    <div class="daily-sheet">
+      <h3>🔥 Ежедневный вход</h3>
+      <div class="daily-sub">Заходите каждый день подряд, чтобы получить попугая-воина на 7-й день!</div>
+      <div class="daily-row" id="daily-row"></div>
+      <div class="daily-claim-msg" id="daily-claim-msg"></div>
+      <button class="btn btn-primary" id="daily-claim-btn">Забрать награду</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+
+// ===== game-common.js =====
+// ============ Shared state & storage ============
+const STORAGE_KEY = 'parrotWorldSave_v1';
+
+// ============ Sound engine (synthesized, no external files needed) ============
+const SoundEngine = (function(){
+  let actx = null;
+  let unlocked = false;
+
+  function getCtx(){
+    if(!actx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      actx = new AC();
+    }
+    return actx;
+  }
+
+  function unlock(){
+    if(unlocked) return;
+    const ctx = getCtx();
+    if(!ctx) return;
+    if(ctx.state === 'suspended') ctx.resume();
+    unlocked = true;
+  }
+  // Unlock on first user interaction (mobile browsers require this)
+  ['pointerdown','touchstart','keydown'].forEach(evt=>{
+    window.addEventListener(evt, unlock, {once:true, passive:true});
+  });
+
+  function tone(ctx, {freq=440, type='sine', start=0, dur=0.15, gain=0.25, freqEnd=null, gainEnd=0.0001}){
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+    if(freqEnd !== null){
+      osc.frequency.exponentialRampToValueAtTime(Math.max(freqEnd,1), ctx.currentTime + start + dur);
+    }
+    g.gain.setValueAtTime(gain, ctx.currentTime + start);
+    g.gain.exponentialRampToValueAtTime(Math.max(gainEnd,0.0001), ctx.currentTime + start + dur);
+    osc.connect(g);
+    g.connect(ctx.destination);
+    osc.start(ctx.currentTime + start);
+    osc.stop(ctx.currentTime + start + dur + 0.02);
+  }
+
+  function noiseBurst(ctx, {start=0, dur=0.2, gain=0.2, filterFreq=1200}){
+    const bufferSize = ctx.sampleRate * dur;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i=0;i<bufferSize;i++){ data[i] = (Math.random()*2-1) * (1 - i/bufferSize); }
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    const filt = ctx.createBiquadFilter();
+    filt.type = 'lowpass';
+    filt.frequency.value = filterFreq;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(gain, ctx.currentTime+start);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+start+dur);
+    src.connect(filt); filt.connect(g); g.connect(ctx.destination);
+    src.start(ctx.currentTime+start);
+  }
+
+  const players = {
+    jump(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:520, freqEnd:820, type:'sine', dur:0.14, gain:0.2});
+    },
+    coin(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:880, type:'square', dur:0.07, gain:0.13});
+      tone(ctx, {freq:1320, type:'square', start:0.06, dur:0.09, gain:0.11});
+    },
+    hit(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:180, freqEnd:60, type:'sawtooth', dur:0.35, gain:0.22});
+      noiseBurst(ctx, {dur:0.22, gain:0.18, filterFreq:900});
+    },
+    feed(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:420, freqEnd:560, type:'triangle', dur:0.12, gain:0.16});
+    },
+    clean(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:1100, freqEnd:1500, type:'sine', dur:0.18, gain:0.1});
+      tone(ctx, {freq:1500, freqEnd:1900, type:'sine', start:0.08, dur:0.14, gain:0.08});
+    },
+    play(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:600, type:'triangle', dur:0.1, gain:0.15});
+      tone(ctx, {freq:760, type:'triangle', start:0.08, dur:0.12, gain:0.14});
+      tone(ctx, {freq:960, type:'triangle', start:0.16, dur:0.14, gain:0.13});
+    },
+    pet(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:500, freqEnd:640, type:'sine', dur:0.16, gain:0.12});
+    },
+    grow(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:140, freqEnd:340, type:'sawtooth', dur:1.15, gain:0.14});
+    },
+    pop(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:90, freqEnd:40, type:'square', dur:0.3, gain:0.28});
+      noiseBurst(ctx, {dur:0.35, gain:0.3, filterFreq:2200});
+    },
+    coinShop(){
+      const ctx = getCtx(); if(!ctx) return;
+      tone(ctx, {freq:700, type:'sine', dur:0.08, gain:0.12});
+      tone(ctx, {freq:1050, type:'sine', start:0.07, dur:0.1, gain:0.11});
+      tone(ctx, {freq:1400, type:'sine', start:0.14, dur:0.14, gain:0.1});
+    }
+  };
+
+  return {
+    play(name){
+      try{
+        const ctx = getCtx();
+        if(!ctx) return;
+        if(ctx.state === 'suspended') ctx.resume();
+        if(players[name]) players[name]();
+      }catch(e){ /* fail silently - sound is a nice-to-have */ }
+    }
+  };
+})();
+
+function playSound(name){ SoundEngine.play(name); }
+
+
+function loadSave(){
+  let data;
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    data = raw ? JSON.parse(raw) : null;
+  }catch(e){ data = null; }
+  if(!data){
+    data = {
+      coins: 30,
+      bestDistance: 0,
+      ownedSkins: ['green'],
+      currentSkin: 'green',
+      parrots: [
+        { id:1, name:'Кеша', color:'green', hunger:80, happy:80, clean:90, stage:'baby', age:0 }
+      ],
+      toys: [],
+      lastTick: Date.now(),
+      streak: 0,
+      lastLoginDay: null,
+      ownedToys: [],
+      quests: [],
+      questsWeekStart: null,
+      warriorUnlocked: false
+    };
+    saveSave(data);
+  }
+  // migrate missing fields
+  if(!data.parrots) data.parrots = [{ id:1, name:'Кеша', color:'green', hunger:80, happy:80, clean:90, stage:'baby', age:0 }];
+  if(!data.toys) data.toys = [];
+  if(!data.ownedSkins) data.ownedSkins = ['green'];
+  if(!data.currentSkin) data.currentSkin = 'green';
+  if(typeof data.coins !== 'number') data.coins = 30;
+  if(typeof data.bestDistance !== 'number') data.bestDistance = 0;
+  if(typeof data.streak !== 'number') data.streak = 0;
+  if(typeof data.lastLoginDay !== 'string') data.lastLoginDay = null;
+  if(!Array.isArray(data.ownedToys)) data.ownedToys = [];
+  if(!Array.isArray(data.quests)) data.quests = [];
+  // migrate legacy daily-quest field (questsDay) -> weekly quests reset from scratch
+  if(typeof data.questsWeekStart !== 'string'){
+    data.questsWeekStart = null;
+    data.quests = [];
+  }
+  delete data.questsDay;
+  if(typeof data.warriorUnlocked !== 'boolean') data.warriorUnlocked = false;
+  data.parrots.forEach(p=>{
+    if(typeof p.overfeedCount !== 'number') p.overfeedCount = 0;
+    if(typeof p.puff !== 'number') p.puff = 0;
+    if(!Array.isArray(p.toys)){
+      // migrate legacy single p.toy -> toys array
+      p.toys = p.toy ? [p.toy] : [];
+      delete p.toy;
+    }
+    if(typeof p.legendary !== 'boolean') p.legendary = (p.color === 'warrior');
+  });
+  return data;
+}
+
+
+function saveSave(data){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }catch(e){ /* ignore quota errors */ }
+}
+
+let GAME = loadSave();
+
+function persist(){ saveSave(GAME); }
+
+// ============ Weekly quests (missions) — global so both mini-games can report progress ============
+// A fixed set of 30 quests (easy / medium / hard) is rolled once every 7 real
+// days. All 30 are shown at once and stay active for the whole week, tracked
+// via GAME.quests (array of {id,progress,claimed}) and GAME.questsWeekStart
+// (the ISO date the current weekly batch started).
+const QUEST_POOL = [
+  // ---- Easy (12) — quick everyday care actions, small rewards ----
+  { id:'feed3',    type:'feed',    target:3,   icon:'🌾', title:'Покормите попугая 3 раза',            reward:15,  diff:'easy' },
+  { id:'clean2',   type:'clean',   target:2,   icon:'🧽', title:'Помойте попугая 2 раза',               reward:15,  diff:'easy' },
+  { id:'play2',    type:'play',    target:2,   icon:'🧸', title:'Поиграйте с попугаем 2 раза',          reward:15,  diff:'easy' },
+  { id:'pet3',     type:'pet',     target:3,   icon:'🖐️', title:'Погладьте попугая 3 раза',            reward:10,  diff:'easy' },
+  { id:'runner1',  type:'runner',  target:1,   icon:'🏃', title:'Сыграйте в «Прыжки-приключение»',      reward:20,  diff:'easy' },
+  { id:'toy1',     type:'toy',     target:1,   icon:'🧸', title:'Купите или наденьте игрушку',          reward:15,  diff:'easy' },
+  { id:'feed10',   type:'feed',    target:10,  icon:'🌾', title:'Покормите попугаев 10 раз за неделю',  reward:25,  diff:'easy' },
+  { id:'clean6',   type:'clean',   target:6,   icon:'🧽', title:'Помойте попугаев 6 раз за неделю',     reward:25,  diff:'easy' },
+  { id:'pet10',    type:'pet',     target:10,  icon:'🖐️', title:'Погладьте попугаев 10 раз за неделю', reward:20,  diff:'easy' },
+  { id:'runner3',  type:'runner',  target:3,   icon:'🏃', title:'Сыграйте в «Прыжки» 3 раза',           reward:25,  diff:'easy' },
+  { id:'coins50',  type:'coins',   target:50,  icon:'🪙', title:'Соберите 50 монет за неделю',          reward:15,  diff:'easy' },
+  { id:'login1',   type:'login',   target:1,   icon:'📅', title:'Зайдите в игру сегодня',               reward:10,  diff:'easy' },
+
+  // ---- Medium (12) — require sustained play across several sessions ----
+  { id:'play8',    type:'play',    target:8,   icon:'🧸', title:'Поиграйте с попугаями 8 раз',          reward:35,  diff:'medium' },
+  { id:'clean12',  type:'clean',   target:12,  icon:'🧽', title:'Помойте попугаев 12 раз',              reward:35,  diff:'medium' },
+  { id:'feed20',   type:'feed',    target:20,  icon:'🌾', title:'Покормите попугаев 20 раз',            reward:40,  diff:'medium' },
+  { id:'runner7',  type:'runner',  target:7,   icon:'🏃', title:'Сыграйте в «Прыжки» 7 раз',            reward:45,  diff:'medium' },
+  { id:'dist2000', type:'distance',target:2000,icon:'📏', title:'Пролетите 2000 м за один забег',       reward:40,  diff:'medium' },
+  { id:'toy3',     type:'toy',     target:3,   icon:'🧸', title:'Купите или наденьте 3 разные игрушки', reward:40,  diff:'medium' },
+  { id:'coins200', type:'coins',   target:200, icon:'🪙', title:'Соберите 200 монет за неделю',         reward:35,  diff:'medium' },
+  { id:'pet25',    type:'pet',     target:25,  icon:'🖐️', title:'Погладьте попугаев 25 раз',           reward:35,  diff:'medium' },
+  { id:'login3',   type:'login',   target:3,   icon:'📅', title:'Заходите в игру 3 дня подряд',         reward:30,  diff:'medium' },
+  { id:'newparrot',type:'newparrot',target:1,  icon:'🐣', title:'Заведите нового попугая',              reward:30,  diff:'medium' },
+  { id:'toy5worn', type:'toyworn', target:5,   icon:'🎽', title:'Наденьте максимум игрушек (5) на одного попугая', reward:40, diff:'medium' },
+  { id:'dist3000', type:'distance',target:3000,icon:'📏', title:'Пролетите 3000 м за один забег',       reward:45,  diff:'medium' },
+
+  // ---- Hard (6) — big weekly challenges, biggest rewards ----
+  { id:'score10000',type:'distance',target:10000,icon:'🏆', title:'Установите рекорд 10 000 м в «Прыжках-приключении»', reward:150, diff:'hard' },
+  { id:'feed50',   type:'feed',    target:50,  icon:'🌾', title:'Покормите попугаев 50 раз за неделю',  reward:80,  diff:'hard' },
+  { id:'runner15', type:'runner',  target:15,  icon:'🏃', title:'Сыграйте в «Прыжки» 15 раз за неделю', reward:90,  diff:'hard' },
+  { id:'coins500', type:'coins',   target:500, icon:'🪙', title:'Соберите 500 монет за неделю',         reward:70,  diff:'hard' },
+  { id:'login7',   type:'login',   target:7,   icon:'🔥', title:'Заходите в игру 7 дней подряд',        reward:100, diff:'hard' },
+  { id:'allcare',  type:'allcare', target:40,  icon:'💯', title:'Выполните 40 действий по уходу (корм+мытьё+игры+ласка) за неделю', reward:85, diff:'hard' }
+];
+
+const DIFF_LABEL = { easy:'Лёгкое', medium:'Среднее', hard:'Сложное' };
+const WEEK_MS = 7*24*60*60*1000;
+
+function todayStr(){
+  const d = new Date();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+// Returns the ISO date-time (start of day) the current weekly quest batch began.
+function ensureWeeklyQuests(){
+  const now = Date.now();
+  const start = GAME.questsWeekStart ? Date.parse(GAME.questsWeekStart+'T00:00:00') : NaN;
+  const expired = isNaN(start) || (now - start) >= WEEK_MS;
+  if(expired || !GAME.quests.length){
+    GAME.quests = QUEST_POOL.map(q=>({ id:q.id, progress:0, claimed:false }));
+    GAME.questsWeekStart = todayStr();
+    persist();
+  }
+}
+
+function weekTimeLeftLabel(){
+  const start = Date.parse((GAME.questsWeekStart||todayStr())+'T00:00:00');
+  const end = start + WEEK_MS;
+  const msLeft = Math.max(0, end - Date.now());
+  const days = Math.floor(msLeft/(24*60*60*1000));
+  const hours = Math.floor((msLeft%(24*60*60*1000))/(60*60*1000));
+  if(days > 0) return `Осталось ${days} дн. ${hours} ч.`;
+  return `Осталось ${hours} ч.`;
+}
+
+// type: which quest category advanced. amount: how much to add (default 1).
+// For 'distance', 'toyworn' and 'login' type quests, amount is treated as a
+// high-water mark (best value reached) rather than an additive counter,
+// since these represent "reach N", not "accumulate N over many actions".
+function questProgress(type, amount){
+  amount = (amount === undefined) ? 1 : amount;
+  ensureWeeklyQuests();
+  let changed = false;
+  GAME.quests.forEach(q=>{
+    const def = QUEST_POOL.find(d=>d.id===q.id);
+    if(!def || def.type!==type || q.claimed || q.progress>=def.target) return;
+    if(type==='distance' || type==='toyworn' || type==='login'){
+      q.progress = Math.max(q.progress, Math.min(def.target, amount));
+    } else {
+      q.progress = Math.min(def.target, q.progress + amount);
+    }
+    changed = true;
+  });
+  if(changed) persist();
+}
+
+function renderQuestPanel(){
+  ensureWeeklyQuests();
+  const list = document.getElementById('quest-list');
+  if(!list) return;
+  const timeLabel = document.getElementById('quest-time-left');
+  if(timeLabel) timeLabel.textContent = weekTimeLeftLabel();
+  list.innerHTML = '';
+  const order = { easy:0, medium:1, hard:2 };
+  const sorted = [...GAME.quests].sort((a,b)=>{
+    const da = QUEST_POOL.find(d=>d.id===a.id), db = QUEST_POOL.find(d=>d.id===b.id);
+    return (order[da.diff]-order[db.diff]) || (da.target-db.target);
+  });
+  sorted.forEach(q=>{
+    const def = QUEST_POOL.find(d=>d.id===q.id);
+    if(!def) return;
+    const done = q.progress >= def.target;
+    const el = document.createElement('div');
+    el.className = 'quest-item diff-'+def.diff + (q.claimed?' done':'');
+    el.innerHTML = `
+      <div class="quest-icon">${def.icon}</div>
+      <div class="quest-info">
+        <div class="quest-title">${def.title}</div>
+        <div class="quest-diff-tag diff-${def.diff}">${DIFF_LABEL[def.diff]}</div>
+        <div class="quest-progress">${Math.min(q.progress,def.target)}/${def.target}</div>
+        <div class="quest-reward">🪙 ${def.reward}</div>
+      </div>
+      <button class="quest-claim-btn" ${(!done||q.claimed)?'disabled':''}>${q.claimed?'Получено':'Забрать'}</button>
+    `;
+    el.querySelector('.quest-claim-btn').addEventListener('click', ()=>{
+      if(q.claimed || q.progress < def.target) return;
+      q.claimed = true;
+      GAME.coins += def.reward;
+      persist();
+      const homeCoin = document.getElementById('home-coin-count');
+      if(homeCoin) homeCoin.textContent = GAME.coins;
+      const careCoin = document.getElementById('care-coin-hud');
+      if(careCoin) careCoin.textContent = GAME.coins;
+      const runnerCoin = document.getElementById('runner-coin-hud');
+      if(runnerCoin) runnerCoin.textContent = GAME.coins;
+      playSound('coinShop');
+      showToast(`Задание выполнено! +${def.reward} 🪙`);
+      renderQuestPanel();
+    });
+    list.appendChild(el);
+  });
+}
+
+function openQuestPanel(){
+  renderQuestPanel();
+  document.getElementById('quest-panel').classList.add('show');
+}
+function closeQuestPanel(){
+  document.getElementById('quest-panel').classList.remove('show');
+}
+
+// ============ Daily login streak & legendary warrior parrot reward ============
+const STREAK_REWARDS = [5, 8, 10, 12, 15, 18, 40]; // day 1..7 coin rewards (day 7 also grants the warrior parrot)
+
+function daysBetween(a,b){
+  const MS = 24*60*60*1000;
+  const da = new Date(a+'T00:00:00');
+  const db = new Date(b+'T00:00:00');
+  return Math.round((db-da)/MS);
+}
+
+function checkDailyLogin(){
+  const today = todayStr();
+  if(GAME.lastLoginDay === today){
+    return null; // already claimed today, no popup
+  }
+  if(GAME.lastLoginDay){
+    const gap = daysBetween(GAME.lastLoginDay, today);
+    if(gap === 1){
+      GAME.streak = Math.min(7, GAME.streak + 1);
+    } else if(gap > 1 || gap < 0){
+      GAME.streak = 1; // missed a day (or clock changed) - restart the streak
+    } else {
+      GAME.streak = Math.max(1, GAME.streak);
+    }
+  } else {
+    GAME.streak = 1;
+  }
+  GAME.lastLoginDay = today;
+  persist();
+  return GAME.streak;
+}
+
+function renderDailyPanel(streakDay){
+  const row = document.getElementById('daily-row');
+  row.innerHTML = '';
+  for(let day=1; day<=7; day++){
+    const el = document.createElement('div');
+    const done = day < streakDay || (day===streakDay);
+    const isToday = day===streakDay;
+    const isLegendary = day===7;
+    el.className = 'daily-day' + (day<streakDay?' done':'') + (isToday?' today':'') + (isLegendary?' legendary':'');
+    const icon = isLegendary ? '🐉' : '🪙';
+    el.innerHTML = `<span class="dd-icon">${icon}</span>День ${day}<br>${isLegendary?'Воин':STREAK_REWARDS[day-1]}`;
+    row.appendChild(el);
+  }
+  document.getElementById('daily-claim-msg').textContent =
+    streakDay===7
+      ? 'Поздравляем! 7 дней подряд — попугай-воин ваш! 🐉'
+      : `Вы заходите ${streakDay}-й день подряд!`;
+}
+
+function claimDailyReward(streakDay){
+  const reward = STREAK_REWARDS[streakDay-1] || 5;
+  GAME.coins += reward;
+  let msg = `+${reward} 🪙 за вход ${streakDay}-й день подряд!`;
+  if(streakDay === 7){
+    GAME.warriorUnlocked = true;
+    if(!GAME.ownedSkins.includes('warrior')) GAME.ownedSkins.push('warrior');
+    const id = Date.now();
+    GAME.parrots.push({
+      id, name: 'Генерал Чи 🐉', color:'warrior', legendary:true,
+      hunger:90, happy:95, clean:90, stage:'adult', age:12, overfeedCount:0, puff:0, toys:[]
+    });
+    msg = 'Попугай-воин "Генерал Чи" присоединился к вашей ферме! 🐉🎉';
+    GAME.streak = 0; // restart the cycle after claiming the legendary reward
+  }
+  persist();
+  const homeCoin = document.getElementById('home-coin-count');
+  if(homeCoin) homeCoin.textContent = GAME.coins;
+  const homeStreak = document.getElementById('home-streak-count');
+  if(homeStreak) homeStreak.textContent = GAME.streak;
+  document.getElementById('daily-panel').classList.remove('show');
+  showToast(msg);
+}
+
+function maybeShowDailyPanel(){
+  const streakDay = checkDailyLogin();
+  if(streakDay === null) return;
+  questProgress('login', GAME.streak);
+  renderDailyPanel(streakDay);
+  document.getElementById('daily-panel').classList.add('show');
+  const btn = document.getElementById('daily-claim-btn');
+  btn.onclick = ()=> claimDailyReward(streakDay);
+}
+
+// ============ Toast ============
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 1800);
+}
+
+// ============ Screen navigation ============
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ============ Canvas sizing helper (handles devicePixelRatio) ============
+function fitCanvas(canvas){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const rect = canvas.parentElement === document.body ? {width:window.innerWidth,height:window.innerHeight} : canvas.getBoundingClientRect();
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  canvas.width = Math.round(w*dpr);
+  canvas.height = Math.round(h*dpr);
+  canvas.style.width = w+'px';
+  canvas.style.height = h+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx, w, h};
+}
+
+// ============ Skin color palettes ============
+const SKIN_DEFS = {
+  green:  { nameRu:'Классический зелёный', price:0,  body:'#3fc76a', bodyDark:'#1f7a38', belly:'#eaffef', cheek:'#ffe8b8' },
+  blue:   { nameRu:'Небесно-голубой',       price:40, body:'#3aa0e8', bodyDark:'#1f5f9e', belly:'#eaf6ff', cheek:'#ffffff' },
+  yellow: { nameRu:'Золотисто-жёлтый',      price:40, body:'#ffd166', bodyDark:'#e0982a', belly:'#fff7e0', cheek:'#ff8fa3' },
+  red:    { nameRu:'Огненно-красный',       price:60, body:'#e85454', bodyDark:'#a52d2d', belly:'#fff0e8', cheek:'#ffffff' },
+  purple: { nameRu:'Королевский фиолетовый',price:80, body:'#9b6fd1', bodyDark:'#5e3b8e', belly:'#f3ecff', cheek:'#ffd8e8' },
+  rainbow:{ nameRu:'Радужный',              price:150,body:'#ff8fd6', bodyDark:'#c94fa0', belly:'#fffbe8', cheek:'#8fd6ff', rainbow:true },
+  warrior:{ nameRu:'Воин 🐉 (7 дней подряд)', price:0, body:'#c0392b', bodyDark:'#7a1f18', belly:'#f5d97a', cheek:'#ffe8b8', legendary:true, locked:true }
+};
+
+// ============ Toy catalogue (15 toys) — bought once, kept forever in the chest ============
+const MAX_EQUIPPED_TOYS = 5;
+const TOY_DEFS = {
+  bell:      { label:'Весёлый колокольчик', price:15,  icon:'🔔' },
+  swing:     { label:'Качели',              price:25,  icon:'🪢' },
+  ball:      { label:'Цветной мяч',         price:10,  icon:'🪀' },
+  mirror:    { label:'Зеркальце',           price:20,  icon:'🪞' },
+  feather:   { label:'Перьевая дразнилка',  price:12,  icon:'🪶' },
+  ladder:    { label:'Верёвочная лестница', price:30,  icon:'🪜' },
+  drum:      { label:'Маленький барабан',   price:35,  icon:'🥁' },
+  kite:      { label:'Воздушный змей',      price:45,  icon:'🪁' },
+  puzzle:    { label:'Игрушка-головоломка', price:40,  icon:'🧩' },
+  star:      { label:'Блестящая звезда',    price:50,  icon:'⭐' },
+  flower:    { label:'Искусственный цветок',price:18,  icon:'🌸' },
+  hat:       { label:'Маленькая шляпа',     price:55,  icon:'🎩' },
+  rainbow:   { label:'Радужное кольцо',     price:60,  icon:'🌈' },
+  trumpet:   { label:'Игрушечная труба',    price:48,  icon:'🎺' },
+  crown:     { label:'Золотая корона',      price:80,  icon:'👑' }
+};
+
+// ============ Sassy / diva parrot one-liners ============
+// Playful, cheeky, over-the-top arrogant lines the parrot "says" to the player,
+// affectionately calling them Pampam / Zara. Light teasing, never mean-spirited.
+const PARROT_QUOTES = [
+  'Пампам, посторонись — летит легенда!',
+  'Зара, ты вообще видела, как я это сделал? Аплодисменты приветствуются.',
+  'Пампам, я тут звезда шоу, а ты — просто зритель с телефоном.',
+  'Извини, Зара, но гениев вроде меня рождается один на миллион.',
+  'Пампам, мои перья лучше твоей причёски, признай это.',
+  'Зара, я не хвастаюсь, я просто констатирую факты о своей крутости.',
+  'Пампам, аплодируй тише — у меня чувствительный слух гения.',
+  'Кто здесь самый красивый попугай? Правильно, Зара, это я.',
+  'Пампам, ты играешь, а я работаю над своей легендой.',
+  'Зара, будь как я — уверенным, дерзким и с идеальными перьями.',
+  'Пампам, я мог бы дать тебе автограф, но крылья заняты — я лечу к победе.',
+  'Зара, серьёзно, ты снова проиграл? Я разочарован, но не удивлён.',
+  'Пампам, спасибо за игру, но давай честно — главный герой тут я.',
+  'Я, Зара, не падаю. Я делаю драматичные театральные приземления.',
+  'Пампам, притормози с эмоциями, я всего лишь показываю мастер-класс.',
+  'Зара, если бы важность измерялась в перьях, я бы был миллиардером.',
+  'Пампам, не благодари меня за это выступление — просто наслаждайся.',
+  'Зара, ты можешь идти домой, шоу окончено, я снова выиграл.',
+  'Пампам, я слишком очарователен, чтобы проигрывать этой игре.',
+  'Скромность — это не про меня, Зара, у меня просто нет для неё места.',
+  'Пампам, глаза не отводи — это лучшее шоу, которое ты увидишь сегодня.',
+  'Зара, признай: без меня эта игра была бы просто скучным полем.',
+  'Пампам, мои крылья работают на аплодисменты, продолжай хлопать.',
+  'Зара, я бы сказал "удачи", но тебе она явно не нужна... шучу, нужна.',
+  'Пампам, ты снова здесь? Я же говорил, что буду скучать по победам без тебя.',
+  'Мой девиз, Зара: летать высоко и никого не слушать, особенно тебя.',
+  'Пампам, я коллекционирую монеты и комплименты — неси и то, и другое.',
+  'Зара, я не заносчивый, я просто объективно потрясающий.',
+  'Пампам, следующий прыжок посвящается моей несравненной харизме.',
+  'Зара, ты стараешься, это мило. Продолжай, у тебя почти получается.',
+  'Пампам, я рождён для сцены, а эта дорожка — моя личная сцена.',
+  'Зара, я слышал аплодисменты… а, нет, это снова я себе хлопаю.',
+  'Пампам, будь как я: летай красиво и не признавай ошибок.',
+  'Зара, ты в порядке? Кажется, тебя ослепило моё сияние.',
+  'Пампам, следующая монета точно моя — я тут главный по блеску.',
+  'Зара, я профессионал в трёх вещах: полёт, стиль и лёгкое хвастовство.',
+  'Пампам, обожаю зрителей, которые аплодируют молча — то есть тебя.',
+  'Зара, я бы сказал что-то скромное, но зачем врать самому себе?',
+  'Пампам, я не тороплюсь — я просто предпочитаю прибывать эффектно.',
+  'Зара, если проигрыш — это искусство, ты уже почти Пикассо.',
+  'Пампам, я лечу не быстро, я лечу стильно, это разные вещи.',
+  'Зара, комплимент дня: ты неплохо смотришься рядом со мной.',
+  'Пампам, следующий уровень будет посвящён моей грандиозности.',
+  'Зара, я слышал, что я лучший попугай во всей игре. Кто сказал? Я сказал.',
+  'Пампам, аплодисменты не обязательны, но крайне рекомендуются.',
+  'Зара, мои перья требуют больше уважения, чем ты им оказываешь.',
+  'Пампам, я мог бы летать выше, но зачем пугать окружающих величием?',
+  'Зара, помни: я не падаю, я просто временно инспектирую землю.',
+  'Пампам, эта игра была бы никем без меня, и мы оба это знаем.',
+  'Зара, продолжай стараться, гениальность вроде моей не даётся сразу.',
+  'Пампам, я рождён летать, ты рождён восхищаться — распределение ролей идеальное.',
+  'Зара, у меня нет времени на скромность, у меня рекорд на кону.'
+];
+
+// 50 extra sassy / arrogant one-liners the parrot "says", displayed in an
+// anime-style speech bubble near its beak. Playful, cheeky, over-the-top,
+// never genuinely mean-spirited.
+const PARROT_SASSY_QUOTES = [
+  'Пампам, я сегодня особенно великолепен, знаю, тяжело смотреть.',
+  'Зара, подвинься — тут только одна звезда, и это не ты.',
+  'Пампам, мой клюв острее твоих аргументов, признай поражение.',
+  'Зара, я гений в перьях, а ты просто зритель без билета.',
+  'Пампам, аплодисменты можно тише, но обязательно продолжай.',
+  'Зара, я не заносчив, я просто прав почти всегда, как сейчас.',
+  'Пампам, мои крылья созданы для славы, а не для скромности.',
+  'Зара, я бы извинился, но извиняться — удел не гениев.',
+  'Пампам, мой блеск слепит даже сквозь экран телефона.',
+  'Зара, ты серьёзно думала, что выиграешь у легенды? Мило.',
+  'Пампам, я бы сказал "после вас", но после меня нет никого.',
+  'Зара, моё эго и мои перья одинаково безупречны, увы для тебя.',
+  'Пампам, я не хвастаюсь — я просто зачитываю факты вслух.',
+  'Зара, будь как я: дерзкий, яркий и вечно прав.',
+  'Пампам, моя корона невидима, но она точно на мне.',
+  'Зара, я мог бы промолчать, но гениальность требует комментариев.',
+  'Пампам, ты в порядке? Кажется, моя харизма тебя контузила.',
+  'Зара, мой полёт — искусство, твой взгляд — просто зависть.',
+  'Пампам, я слышал слово "скромность", но не понял, к чему оно.',
+  'Зара, продолжай стараться — вдохновение рядом со мной бесплатно.',
+  'Пампам, если бы важность продавалась, я бы разорил рынок.',
+  'Зара, мои перья требуют отдельного аплодисмента, начинай.',
+  'Пампам, я родился с идеальной осанкой и идеальным мнением о себе.',
+  'Зара, у меня нет конкурентов, есть только зрители.',
+  'Пампам, скромничать может любой, а быть мной — только я.',
+  'Зара, я снова прав, просто прими это спокойно, без слёз.',
+  'Пампам, мой клюв подписывает автографы, а не извинения.',
+  'Зара, ты видела моё отражение? Даже оно аплодирует.',
+  'Пампам, я не опаздываю — все остальные торопятся не туда.',
+  'Зара, будь честна: без меня эта игра — просто пустой экран.',
+  'Пампам, мои перья сверкают ярче твоих аргументов, замолчи красиво.',
+  'Зара, я гений, ты — счастливый свидетель этого факта.',
+  'Пампам, скромность — это костюм, который мне не по размеру.',
+  'Зара, я приземляюсь эффектно, потому что падать — не мой стиль.',
+  'Пампам, аплодируй быстрее, у величия мало свободного времени.',
+  'Зара, мой клюв идеален, мой хвост идеален, что не так с тобой?',
+  'Пампам, я бы дал тебе совет, но зачем — ты не я.',
+  'Зара, каждый мой полёт — это персональная выставка искусства.',
+  'Пампам, я слишком занят своим величием, чтобы завидовать тебе.',
+  'Зара, ты играешь ради удовольствия, я играю ради истории.',
+  'Пампам, мои крылья, мой клюв, мой блеск — всё выше твоей лиги.',
+  'Зара, поверь, вселенная вращается, но вокруг меня чуть быстрее.',
+  'Пампам, я не пернатый, я произведение искусства с крыльями.',
+  'Зара, если гениальность — преступление, я уже отбываю пожизненное.',
+  'Пампам, ты стараешься мило, но гениальность не арендуется.',
+  'Зара, мои перья — редкость, твоё терпение — тоже, кстати спасибо.',
+  'Пампам, я скромно молчу... ну ладно, две секунды помолчал, хватит.',
+  'Зара, мой клюв дороже твоих аргументов, инвестируй в меня.',
+  'Пампам, я приземляюсь так, будто аплодисменты обязательны.',
+  'Зара, будь честна перед собой: я лучший, ты — почти лучший.'
+];
+
+// Combined pool for random ambient/interaction quotes across the whole game
+const ALL_PARROT_QUOTES = PARROT_QUOTES.concat(PARROT_SASSY_QUOTES);
+
+function randomParrotQuote(){
+  return ALL_PARROT_QUOTES[Math.floor(Math.random()*ALL_PARROT_QUOTES.length)];
+}
+
+
+// ===== home.js =====
+// ============ Home screen animated background ============
+(function(){
+  const canvas = document.getElementById('home-bg');
+  let ctx, W, H;
+  let raf = null;
+  let t = 0;
+
+  function resize(){
+    const r = fitCanvas(canvas);
+    ctx = r.ctx; W = r.w; H = r.h;
+  }
+
+  // Clouds
+  const clouds = [];
+  function initClouds(){
+    clouds.length = 0;
+    for(let i=0;i<6;i++){
+      clouds.push({
+        x: Math.random(),
+        y: 0.05 + Math.random()*0.35,
+        scale: 0.6 + Math.random()*0.9,
+        speed: 0.008 + Math.random()*0.012,
+        alpha: 0.55 + Math.random()*0.35
+      });
+    }
+  }
+
+  function drawCloud(cx, cy, scale, alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    const r = 22*scale;
+    ctx.ellipse(cx, cy, r*1.6, r*0.85, 0, 0, Math.PI*2);
+    ctx.ellipse(cx - r*1.1, cy+r*0.15, r*0.9, r*0.65, 0, 0, Math.PI*2);
+    ctx.ellipse(cx + r*1.2, cy+r*0.1, r*1.0, r*0.7, 0, 0, Math.PI*2);
+    ctx.ellipse(cx - r*0.2, cy - r*0.35, r*0.95, r*0.7, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawSky(){
+    const grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'#0b3d91');
+    grad.addColorStop(0.45,'#1e6fd9');
+    grad.addColorStop(0.75,'#5fb6e8');
+    grad.addColorStop(1,'#bfe6ff');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,W,H);
+
+    // sun glow behind
+    const glow = ctx.createRadialGradient(W*0.78,H*0.2,10,W*0.78,H*0.2,W*0.5);
+    glow.addColorStop(0,'rgba(255,240,200,0.35)');
+    glow.addColorStop(1,'rgba(255,240,200,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  function drawHills(){
+    // distant leafy hills for an aviary-garden feel
+    ctx.save();
+    ctx.fillStyle = 'rgba(31,122,56,0.55)';
+    ctx.beginPath();
+    ctx.moveTo(0,H*0.78);
+    ctx.quadraticCurveTo(W*0.2,H*0.68, W*0.45,H*0.76);
+    ctx.quadraticCurveTo(W*0.7,H*0.84, W,H*0.7);
+    ctx.lineTo(W,H);
+    ctx.lineTo(0,H);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(47,168,79,0.7)';
+    ctx.beginPath();
+    ctx.moveTo(0,H*0.9);
+    ctx.quadraticCurveTo(W*0.3,H*0.8, W*0.55,H*0.88);
+    ctx.quadraticCurveTo(W*0.8,H*0.95, W,H*0.85);
+    ctx.lineTo(W,H);
+    ctx.lineTo(0,H);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ---- Draw a detailed Australian Blue Parakeet (Budgerigar) ----
+  // Facing left, perched, wing detail, cheek patches, barred head pattern - characteristic of budgies.
+  function drawBlueBudgie(cx, cy, scale, wingFlap){
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+
+    // Tail (long, tapered, blue with dark tip)
+    ctx.save();
+    ctx.rotate(0.08);
+    const tailGrad = ctx.createLinearGradient(30,0,90,10);
+    tailGrad.addColorStop(0,'#1e6fd9');
+    tailGrad.addColorStop(1,'#0b3d91');
+    ctx.fillStyle = tailGrad;
+    ctx.beginPath();
+    ctx.moveTo(28,-6);
+    ctx.quadraticCurveTo(70,-4, 95,6);
+    ctx.quadraticCurveTo(70,10, 30,10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // Body (rounded, teardrop) - vivid sky blue
+    const bodyGrad = ctx.createRadialGradient(-10,-15,5,0,0,55);
+    bodyGrad.addColorStop(0,'#7fd0ff');
+    bodyGrad.addColorStop(0.5,'#2f8fe0');
+    bodyGrad.addColorStop(1,'#155aa8');
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.ellipse(0,5,34,40,0,0,Math.PI*2);
+    ctx.fill();
+
+    // Belly patch lighter
+    ctx.fillStyle = 'rgba(230,248,255,0.55)';
+    ctx.beginPath();
+    ctx.ellipse(-6,14,18,24,0,0,Math.PI*2);
+    ctx.fill();
+
+    // Wing (folded, with barred pattern typical of budgies)
+    ctx.save();
+    ctx.translate(6, 2);
+    ctx.rotate(wingFlap*0.05);
+    const wingGrad = ctx.createLinearGradient(0,-20,0,30);
+    wingGrad.addColorStop(0,'#1f5f9e');
+    wingGrad.addColorStop(1,'#0b3d91');
+    ctx.fillStyle = wingGrad;
+    ctx.beginPath();
+    ctx.moveTo(-10,-18);
+    ctx.quadraticCurveTo(22,-14, 30,10);
+    ctx.quadraticCurveTo(20,26, -8,24);
+    ctx.quadraticCurveTo(-14,2, -10,-18);
+    ctx.closePath();
+    ctx.fill();
+    // barred stripes on wing
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 2;
+    for(let i=0;i<4;i++){
+      ctx.beginPath();
+      ctx.moveTo(-6+i*7, -10+i*2);
+      ctx.quadraticCurveTo(6+i*7, 0, 0+i*6, 16);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Head (round)
+    ctx.save();
+    ctx.translate(-20,-28);
+    const headGrad = ctx.createRadialGradient(-6,-6,3,0,0,22);
+    headGrad.addColorStop(0,'#bdeaff');
+    headGrad.addColorStop(0.6,'#4fa8ea');
+    headGrad.addColorStop(1,'#1f6fc4');
+    ctx.fillStyle = headGrad;
+    ctx.beginPath();
+    ctx.arc(0,0,20,0,Math.PI*2);
+    ctx.fill();
+
+    // Yellow face mask (characteristic of budgies)
+    ctx.fillStyle = '#fff4c2';
+    ctx.beginPath();
+    ctx.ellipse(-6,4,13,11,0.1,0,Math.PI*2);
+    ctx.fill();
+
+    // Head barring pattern (thin dark stripes on crown - budgie trademark)
+    ctx.strokeStyle = 'rgba(20,50,90,0.55)';
+    ctx.lineWidth = 1.4;
+    for(let i=0;i<5;i++){
+      ctx.beginPath();
+      ctx.moveTo(-16+i*7, -18+ (i%2));
+      ctx.quadraticCurveTo(-13+i*7, -12, -15+i*7, -6);
+      ctx.stroke();
+    }
+
+    // Cheek patch (dark blue/violet spot, characteristic marking)
+    ctx.fillStyle = '#0b3d91';
+    ctx.beginPath();
+    ctx.arc(-16,6,3.2,0,Math.PI*2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(2,9,2.6,0,Math.PI*2);
+    ctx.fill();
+
+    // Cere (nose area) - blue for male budgie
+    ctx.fillStyle = '#1f5fa8';
+    ctx.beginPath();
+    ctx.ellipse(-16,-2,5,4,0,0,Math.PI*2);
+    ctx.fill();
+
+    // Beak (small, curved, grey-horn)
+    ctx.fillStyle = '#7d8ca0';
+    ctx.beginPath();
+    ctx.moveTo(-19,-1);
+    ctx.quadraticCurveTo(-30,2, -22,8);
+    ctx.quadraticCurveTo(-18,5,-14,2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Eye
+    ctx.fillStyle = '#0b1626';
+    ctx.beginPath();
+    ctx.arc(-9,-2,3.4,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-7.8,-3.4,1.1,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.restore(); // head
+
+    // Legs + feet on a branch
+    ctx.strokeStyle = '#c9a15a';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-8,40); ctx.lineTo(-8,52);
+    ctx.moveTo(8,40); ctx.lineTo(8,52);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawBranch(cx, cy, w, scale){
+    ctx.save();
+    ctx.translate(cx,cy);
+    const g = ctx.createLinearGradient(-w/2,0,w/2,10);
+    g.addColorStop(0,'#8a5a2e');
+    g.addColorStop(1,'#5c3a1c');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(-w/2,-6*scale,w,12*scale,6*scale) : ctx.rect(-w/2,-6*scale,w,12*scale);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Falling feathers / sparkles for festive touch
+  const sparkles = [];
+  function initSparkles(){
+    sparkles.length = 0;
+    for(let i=0;i<14;i++){
+      sparkles.push({
+        x: Math.random(), y: Math.random(),
+        r: 1.5+Math.random()*2.5,
+        speed: 0.0006+Math.random()*0.0009,
+        drift: (Math.random()-0.5)*0.0006,
+        alpha: 0.3+Math.random()*0.5
+      });
+    }
+  }
+
+  function draw(){
+    t += 1;
+    drawSky();
+    // clouds
+    clouds.forEach(c=>{
+      c.x += c.speed*0.016;
+      if(c.x > 1.3) c.x = -0.3;
+      drawCloud(c.x*W, c.y*H, c.scale, c.alpha);
+    });
+    drawHills();
+
+    // sparkles (soft floating light dust)
+    sparkles.forEach(s=>{
+      s.y -= s.speed;
+      s.x += s.drift;
+      if(s.y < -0.05){ s.y = 1.05; s.x = Math.random(); }
+      ctx.save();
+      ctx.globalAlpha = s.alpha * (0.6+0.4*Math.sin(t*0.05+s.x*10));
+      ctx.fillStyle = '#fff8d8';
+      ctx.beginPath();
+      ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Branch + main hero blue budgie, gently bobbing
+    const heroScale = Math.min(W,H)*0.0034;
+    const bob = Math.sin(t*0.045)*4;
+    const wingFlap = Math.sin(t*0.09);
+    drawBranch(W*0.72, H*0.42+bob+38*heroScale, W*0.5, heroScale);
+    drawBlueBudgie(W*0.72, H*0.42+bob, heroScale*1.15, wingFlap);
+
+    // A smaller companion budgie in background, different pose
+    const bob2 = Math.sin(t*0.06+1.5)*3;
+    drawBranch(W*0.22, H*0.26+bob2+30*heroScale*0.6, W*0.3, heroScale*0.6);
+    ctx.save();
+    ctx.globalAlpha = 0.85;
+    drawBlueBudgie(W*0.22, H*0.26+bob2, heroScale*0.62, -wingFlap);
+    ctx.restore();
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  function start(){
+    resize();
+    initClouds();
+    initSparkles();
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(draw);
+  }
+  function stop(){
+    cancelAnimationFrame(raf);
+    raf = null;
+  }
+
+  window.addEventListener('resize', ()=>{ if(document.getElementById('home-screen').classList.contains('active')) resize(); });
+  window.HomeBG = { start, stop };
+})();
+
+
+// ===== runner.js =====
+// ============ Runner Game (Parrot Dash) ============
+(function(){
+  const canvas = document.getElementById('runnerCanvas');
+  let ctx, W, H, groundY;
+  let raf = null;
+  let running = false;
+  let paused = false;
+
+  // Physics constants (scaled at runtime relative to H)
+  let GRAVITY, JUMP_V, GROUND_H;
+  let speed, baseSpeed, distance, coins, spawnTimer, nextSpawnAt;
+  let obstacles, coinsList, particles;
+  let frame = 0;
+  let lastTime = 0;
+
+  const bird = {
+    x: 0, y:0, vy:0, w:0, h:0,
+    onGround:true, dead:false,
+    squashX:1, squashY:1
+  };
+
+  function resize(){
+    const r = fitCanvas(canvas);
+    ctx = r.ctx; W = r.w; H = r.h;
+    groundY = H*0.74;
+    GROUND_H = H - groundY;
+    GRAVITY = H*0.0032;      // balanced: light feel but controlled arc
+    JUMP_V = -H*0.042;       // solid jump height, stays comfortably on screen
+    bird.w = Math.min(W,H)*0.115;
+    bird.h = bird.w*0.85;
+    bird.x = W*0.15;
+    if(bird.y === 0 || bird.onGround) bird.y = groundY - bird.h;
+  }
+
+  function currentSkin(){
+    return SKIN_DEFS[GAME.currentSkin] || SKIN_DEFS.green;
+  }
+
+  // ---------- Drawing: the green parrot hero (side-view, facing right, running) ----------
+  // Coordinate convention inside this function, before translate/scale:
+  // origin = center of bird bounding box. Negative Y = up (head). Positive Y = down (legs).
+  // Negative X = back/tail. Positive X = front/beak (facing right, direction of travel).
+  function drawParrot(x, y, w, h, runPhase, squashX, squashY, dead){
+    const skin = currentSkin();
+    ctx.save();
+    ctx.translate(x + w/2, y + h/2);
+    ctx.scale(squashX, squashY); // safe squash: both factors always positive, never inverts
+
+    const s = w/70; // local scale unit
+
+    if(dead){
+      ctx.rotate(0.35);
+      ctx.globalAlpha = 0.9;
+    }
+
+    // Tail feathers (trailing behind, to the LEFT since bird faces right)
+    ctx.save();
+    ctx.rotate(-0.12);
+    let tailColor = skin.bodyDark;
+    if(skin.rainbow){
+      const grad = ctx.createLinearGradient(-55*s,0,-18*s,0);
+      grad.addColorStop(0,'#ffe86b'); grad.addColorStop(0.5,'#8fd6ff'); grad.addColorStop(1,'#ff8fd6');
+      tailColor = grad;
+    }
+    ctx.fillStyle = tailColor;
+    ctx.beginPath();
+    ctx.moveTo(-18*s,-5*s);
+    ctx.quadraticCurveTo(-40*s,-3*s, -55*s,4*s);
+    ctx.quadraticCurveTo(-38*s,8*s, -16*s,7*s);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // Body
+    const bodyGrad = ctx.createRadialGradient(6*s,-10*s,4*s,0,0,32*s);
+    bodyGrad.addColorStop(0, skin.rainbow? '#ffe86b' : lighten(skin.body,0.35));
+    bodyGrad.addColorStop(0.55, skin.body);
+    bodyGrad.addColorStop(1, skin.bodyDark);
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.ellipse(0,2*s,22*s,26*s,0,0,Math.PI*2);
+    ctx.fill();
+
+    // Belly
+    ctx.fillStyle = skin.belly;
+    ctx.globalAlpha = (dead?0.9:1) * 0.8;
+    ctx.beginPath();
+    ctx.ellipse(2*s,10*s,11*s,15*s,0,0,Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = dead?0.9:1;
+
+    // Wing (flapping)
+    const wingAngle = Math.sin(runPhase)*0.5 - 0.15;
+    ctx.save();
+    ctx.translate(-2*s,0);
+    ctx.rotate(wingAngle);
+    ctx.fillStyle = skin.bodyDark;
+    ctx.beginPath();
+    ctx.moveTo(4*s,-14*s);
+    ctx.quadraticCurveTo(-18*s,-10*s, -20*s,10*s);
+    ctx.quadraticCurveTo(-10*s,18*s, 6*s,14*s);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // Head (at front-top = positive X, negative Y)
+    ctx.save();
+    ctx.translate(14*s,-18*s);
+    const headGrad = ctx.createRadialGradient(4*s,-4*s,2*s,0,0,15*s);
+    headGrad.addColorStop(0, lighten(skin.body,0.45));
+    headGrad.addColorStop(1, skin.body);
+    ctx.fillStyle = headGrad;
+    ctx.beginPath();
+    ctx.arc(0,0,14*s,0,Math.PI*2);
+    ctx.fill();
+
+    // Cheek patch
+    ctx.fillStyle = skin.cheek;
+    ctx.beginPath();
+    ctx.ellipse(4*s,3*s,7*s,6*s,-0.1,0,Math.PI*2);
+    ctx.fill();
+
+    // Head crest feather
+    ctx.fillStyle = skin.bodyDark;
+    ctx.beginPath();
+    ctx.moveTo(2*s,-13*s);
+    ctx.quadraticCurveTo(-2*s,-20*s, -6*s,-14*s);
+    ctx.quadraticCurveTo(-2*s,-13*s,2*s,-13*s);
+    ctx.closePath();
+    ctx.fill();
+
+    // Beak (points forward/right)
+    ctx.fillStyle = '#ffb84d';
+    ctx.beginPath();
+    ctx.moveTo(12*s,-1*s);
+    ctx.quadraticCurveTo(24*s,2*s, 13*s,7*s);
+    ctx.quadraticCurveTo(10*s,3*s,6*s,1*s);
+    ctx.closePath();
+    ctx.fill();
+
+    // Eye
+    if(dead){
+      ctx.strokeStyle = '#0b1626'; ctx.lineWidth = 1.6*s;
+      ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(4*s,-4*s); ctx.lineTo(8*s,-1*s);
+      ctx.moveTo(8*s,-4*s); ctx.lineTo(4*s,-1*s); ctx.stroke();
+    }else{
+      ctx.fillStyle = '#0b1626';
+      ctx.beginPath(); ctx.arc(6*s,-2*s,2.4*s,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(6.8*s,-3*s,0.9*s,0,Math.PI*2); ctx.fill();
+    }
+    ctx.restore(); // head
+
+    // Legs (running animation) - anchored at bottom of body
+    const legPhase = Math.sin(runPhase*1.6);
+    ctx.strokeStyle = '#e8a13a';
+    ctx.lineWidth = 2.6*s;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-5*s,24*s); ctx.lineTo(-5*s+legPhase*6*s,33*s);
+    ctx.moveTo(5*s,24*s); ctx.lineTo(5*s-legPhase*6*s,33*s);
+    ctx.stroke();
+    // feet
+    ctx.beginPath();
+    ctx.moveTo(-5*s+legPhase*6*s,33*s); ctx.lineTo(-5*s+legPhase*6*s+4*s,33*s);
+    ctx.moveTo(5*s-legPhase*6*s,33*s); ctx.lineTo(5*s-legPhase*6*s+4*s,33*s);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function lighten(hex, amt){
+    const c = hex.replace('#','');
+    const num = parseInt(c,16);
+    let r = (num>>16)+255*amt, g=((num>>8)&0xff)+255*amt, b=(num&0xff)+255*amt;
+    r=Math.min(255,r); g=Math.min(255,g); b=Math.min(255,b);
+    return `rgb(${r|0},${g|0},${b|0})`;
+  }
+
+  // ---------- Background: minimal, monochrome (only parrot is colored) ----------
+  function drawBackground(){
+    // Flat light grey-white sky
+    ctx.fillStyle = '#eef1f4';
+    ctx.fillRect(0,0,W,H);
+
+    // very subtle horizon gradient band
+    const grad = ctx.createLinearGradient(0,groundY-H*0.15,0,groundY);
+    grad.addColorStop(0,'rgba(210,215,222,0)');
+    grad.addColorStop(1,'rgba(200,205,212,0.6)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,groundY-H*0.15,W,H*0.15);
+
+    // ground: flat neutral grey
+    ctx.fillStyle = '#d7dade';
+    ctx.fillRect(0,groundY,W,H-groundY);
+    ctx.fillStyle = '#c3c7cc';
+    ctx.fillRect(0,groundY,W,3);
+
+    // scrolling ground ticks (neutral)
+    ctx.strokeStyle = 'rgba(140,145,152,0.5)';
+    ctx.lineWidth = 2;
+    const gOffset = (distance*3) % 34;
+    for(let x=-gOffset; x<W; x+=34){
+      ctx.beginPath();
+      ctx.moveTo(x, groundY+8);
+      ctx.lineTo(x+8, groundY+20);
+      ctx.stroke();
+    }
+  }
+
+  // ---------- Obstacles: simple neutral-grey shapes ----------
+  function spawnObstacle(){
+    const types = ['block','spike','floatBar'];
+    const type = types[Math.floor(Math.random()*types.length)];
+    const scale = Math.min(W,H)*0.09;
+    let ob = { x: W+20, type, scale, w: scale*0.9, h: scale*1.2, passed:false };
+    if(type==='spike'){ ob.w = scale*1.1; ob.h = scale*1.0; }
+    if(type==='floatBar'){ ob.h = scale*0.5; ob.y = groundY - ob.h - scale*1.15; ob.floating = true; ob.w = scale*1.5; }
+    obstacles.push(ob);
+  }
+
+  function drawObstacle(ob){
+    const s = ob.scale/40;
+    const baseY = ob.floating ? ob.y : groundY - ob.h;
+    ctx.save();
+    ctx.translate(ob.x, baseY);
+    ctx.fillStyle = '#8a8f98';
+    if(ob.type==='block'){
+      ctx.beginPath();
+      if(ctx.roundRect) ctx.roundRect(0,0,ob.w,ob.h,6*s); else ctx.rect(0,0,ob.w,ob.h);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fillRect(3*s,3*s,ob.w-6*s,4*s);
+    } else if(ob.type==='spike'){
+      ctx.beginPath();
+      ctx.moveTo(0,ob.h);
+      ctx.lineTo(ob.w*0.5,-4*s);
+      ctx.lineTo(ob.w,ob.h);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(ob.w*0.5,-4*s); ctx.lineTo(ob.w*0.62,ob.h*0.5); ctx.lineTo(ob.w*0.42,ob.h*0.55);
+      ctx.closePath(); ctx.fill();
+    } else if(ob.type==='floatBar'){
+      ctx.beginPath();
+      if(ctx.roundRect) ctx.roundRect(0,0,ob.w,ob.h,ob.h/2); else ctx.rect(0,0,ob.w,ob.h);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fillRect(4*s,2*s,ob.w-8*s,3*s);
+    }
+    ctx.restore();
+  }
+
+  function obstacleHitbox(ob){
+    const baseY = ob.floating ? ob.y : groundY - ob.h;
+    return { x: ob.x + ob.w*0.1, y: baseY + ob.h*0.06, w: ob.w*0.8, h: ob.h*0.92 };
+  }
+
+  // ---------- Coins: the one accent color allowed besides the parrot ----------
+  function spawnCoin(){
+    const y = groundY - (Math.random()*0.32+0.14)*H*0.6 - 20;
+    coinsList.push({ x: W+20, y, r: Math.min(W,H)*0.023, collected:false, bob:Math.random()*10 });
+  }
+
+  function drawCoin(c){
+    ctx.save();
+    const bobY = Math.sin((frame+c.bob)*0.12)*4;
+    ctx.translate(c.x, c.y+bobY);
+    ctx.fillStyle = '#ffd166';
+    ctx.beginPath(); ctx.arc(0,0,c.r,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle = '#c99a2e'; ctx.lineWidth = c.r*0.18;
+    ctx.beginPath(); ctx.arc(0,0,c.r*0.72,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.beginPath(); ctx.arc(-c.r*0.3,-c.r*0.3,c.r*0.22,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  // ---------- Particles (coin collect burst) ----------
+  function burst(x,y,color){
+    for(let i=0;i<8;i++){
+      const ang = (Math.PI*2/8)*i;
+      particles.push({x,y,vx:Math.cos(ang)*3.4,vy:Math.sin(ang)*3.4,life:18,color});
+    }
+  }
+
+  // ---------- Input ----------
+  function jump(){
+    if(!running || paused) return;
+    if(bird.onGround){
+      bird.vy = JUMP_V;
+      bird.onGround = false;
+      playSound('jump');
+    }
+  }
+
+  function handlePointerDown(e){
+    if(document.getElementById('runner-gameover').classList.contains('show')) return;
+    if(document.getElementById('shop-panel').classList.contains('show')) return;
+    jump();
+  }
+
+  // ---------- Reset / Start ----------
+  let quoteTimer = 0;
+  let nextQuoteAt = 0;
+  function resetState(){
+    resize();
+    running = true; paused = false;
+    frame = 0;
+    lastTime = performance.now();
+    baseSpeed = Math.min(W,H)*0.0098;
+    speed = baseSpeed;
+    distance = 0; coins = 0;
+    obstacles = []; coinsList = []; particles = [];
+    bird.y = groundY - bird.h; bird.vy = 0; bird.onGround = true; bird.dead=false;
+    bird.squashX = 1; bird.squashY = 1;
+    spawnTimer = 0; nextSpawnAt = 55;
+    quoteTimer = 0; nextQuoteAt = 240 + Math.random()*180;
+
+    document.getElementById('runner-gameover').classList.remove('show');
+    document.getElementById('runner-tap-hint').style.display='block';
+    updateHud();
+  }
+
+  function updateHud(){
+    document.getElementById('runner-coin-hud').textContent = coins;
+    document.getElementById('runner-best-hud').textContent = Math.max(GAME.bestDistance, Math.floor(distance));
+  }
+
+  function endGame(){
+    running = false;
+    bird.dead = true;
+    playSound('hit');
+    GAME.coins += coins;
+    if(Math.floor(distance) > GAME.bestDistance) GAME.bestDistance = Math.floor(distance);
+    persist();
+    questProgress('runner');
+    questProgress('distance', GAME.bestDistance);
+    questProgress('coins', coins);
+    document.getElementById('go-coins').textContent = coins;
+    document.getElementById('go-distance').textContent = Math.floor(distance);
+    document.getElementById('go-best').textContent = GAME.bestDistance;
+    document.getElementById('go-quote').textContent = '"' + randomParrotQuote() + '"';
+    document.getElementById('runner-coin-hud').textContent = GAME.coins;
+    document.getElementById('runner-best-hud').textContent = GAME.bestDistance;
+    setTimeout(()=>{
+      document.getElementById('runner-gameover').classList.add('show');
+    }, 400);
+  }
+
+  function rectsOverlap(a,b){
+    return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
+  }
+
+  // ---------- Main loop: delta-time based for smoothness across devices ----------
+  function loop(now){
+    if(!ctx) return;
+    if(!now) now = performance.now();
+    let dt = (now - lastTime) / 16.6667; // normalize to ~60fps units
+    dt = Math.min(dt, 2.2); // clamp to avoid huge jumps after tab switch
+    lastTime = now;
+    frame++;
+
+    ctx.clearRect(0,0,W,H);
+    drawBackground();
+
+    if(running){
+      // physics (dt-scaled)
+      bird.vy += GRAVITY*dt;
+      bird.y += bird.vy*dt;
+      if(bird.y >= groundY - bird.h){
+        bird.y = groundY - bird.h;
+        if(!bird.onGround){ bird.squashX = 1.18; bird.squashY = 0.84; }
+        bird.vy = 0;
+        bird.onGround = true;
+      } else {
+        bird.onGround = false;
+      }
+      bird.squashX += (1-bird.squashX)*0.32*dt;
+      bird.squashY += (1-bird.squashY)*0.32*dt;
+
+      // speed ramps with distance, faster overall pace
+      distance += speed*0.062*dt;
+      speed = baseSpeed + Math.min(distance*0.0011, baseSpeed*1.9);
+
+      // spawn obstacles
+      spawnTimer += dt;
+      if(spawnTimer > nextSpawnAt){
+        spawnObstacle();
+        spawnTimer = 0;
+        nextSpawnAt = 48 + Math.random()*42 - Math.min(distance*0.015,18);
+        nextSpawnAt = Math.max(nextSpawnAt, 40);
+      }
+      // spawn coins occasionally
+      if(frame % 42 === 0 && Math.random()<0.6) spawnCoin();
+
+      // periodic sassy parrot commentary
+      quoteTimer += dt;
+      if(quoteTimer > nextQuoteAt){
+        quoteTimer = 0;
+        nextQuoteAt = 260 + Math.random()*200;
+        showToast(randomParrotQuote());
+      }
+
+      // move obstacles
+      obstacles.forEach(ob=> ob.x -= speed*dt);
+      obstacles = obstacles.filter(ob=> ob.x > -100);
+
+      // move coins
+      coinsList.forEach(c=> c.x -= speed*dt);
+      coinsList = coinsList.filter(c=> c.x > -50 && !c.collected);
+
+      // collisions with obstacles
+      const birdBox = {x:bird.x+bird.w*0.24,y:bird.y+bird.h*0.15,w:bird.w*0.56,h:bird.h*0.75};
+      for(const ob of obstacles){
+        const box = obstacleHitbox(ob);
+        if(rectsOverlap(birdBox, box)){
+          endGame();
+          break;
+        }
+      }
+      // collect coins
+      coinsList.forEach(c=>{
+        if(c.collected) return;
+        const dx = (bird.x+bird.w/2) - c.x, dy=(bird.y+bird.h/2) - c.y;
+        if(Math.sqrt(dx*dx+dy*dy) < bird.w*0.55+c.r){
+          c.collected = true;
+          coins++;
+          burst(c.x,c.y,'#ffd166');
+          playSound('coin');
+          updateHud();
+        }
+      });
+
+      if(frame % 5 === 0) document.getElementById('runner-coin-hud').textContent = coins;
+      if(frame % 8 === 0) document.getElementById('runner-best-hud').textContent = Math.max(GAME.bestDistance, Math.floor(distance));
+      if(frame > 80) document.getElementById('runner-tap-hint').style.display='none';
+    }
+
+    // draw obstacles
+    obstacles.forEach(drawObstacle);
+    // draw coins
+    coinsList.forEach(c=>{ if(!c.collected) drawCoin(c); });
+    // particles
+    particles.forEach(p=>{
+      p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=0.16*dt; p.life-=dt;
+      ctx.save(); ctx.globalAlpha = Math.max(p.life/18,0);
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    });
+    particles = particles.filter(p=>p.life>0);
+
+    // draw bird (only colored element in the scene)
+    const runPhase = running ? frame*0.4 : 0;
+    drawParrot(bird.x, bird.y, bird.w, bird.h, runPhase, bird.squashX, bird.squashY, bird.dead);
+
+    raf = requestAnimationFrame(loop);
+  }
+
+  // ---------- Shop ----------
+  function buildShop(){
+    const grid = document.getElementById('skin-grid');
+    grid.innerHTML = '';
+    Object.keys(SKIN_DEFS).forEach(key=>{
+      const def = SKIN_DEFS[key];
+      // Locked legendary skins (like the warrior) only appear once unlocked via
+      // their special reward path (7-day login streak) — never sold for coins.
+      if(def.locked && !GAME.ownedSkins.includes(key)) return;
+      const owned = GAME.ownedSkins.includes(key);
+      const selected = GAME.currentSkin === key;
+      const el = document.createElement('div');
+      el.className = 'skin-item' + (selected?' selected':'') + (!owned && GAME.coins<def.price?' locked':'');
+      const swBg = def.rainbow ? 'linear-gradient(135deg,#ff8fd6,#8fd6ff,#ffe86b)' : def.body;
+      el.innerHTML = `
+        <div class="skin-swatch" style="background:${swBg}"></div>
+        <div class="skin-name">${def.nameRu || def.name}</div>
+        ${owned ? '' : `<div class="skin-price">🪙 ${def.price}</div>`}
+        <button class="skin-btn ${owned ? (selected?'owned':'use') : 'buy'}">${owned ? (selected?'Используется':'Выбрать') : 'Купить'}</button>
+      `;
+      el.querySelector('.skin-btn').addEventListener('click', ()=>{
+        if(owned){
+          GAME.currentSkin = key;
+          persist();
+          buildShop();
+          playSound('pet');
+          showToast('Цвет изменён! 🎨');
+        } else if(GAME.coins >= def.price){
+          GAME.coins -= def.price;
+          GAME.ownedSkins.push(key);
+          GAME.currentSkin = key;
+          persist();
+          buildShop();
+          document.getElementById('runner-coin-hud').textContent = GAME.coins;
+          playSound('coinShop');
+          showToast('Покупка успешна! 🎉');
+        } else {
+          showToast('Недостаточно монет 🪙');
+        }
+      });
+      grid.appendChild(el);
+    });
+  }
+
+  function openShop(){
+    document.querySelector('.shop-sheet h3').textContent = '🎨 Магазин расцветок';
+    document.querySelector('.shop-sub').textContent = 'Используйте монеты, чтобы открыть новые цвета';
+    buildShop();
+    document.getElementById('shop-panel').classList.add('show');
+  }
+  function closeShop(){
+    document.getElementById('shop-panel').classList.remove('show');
+  }
+
+  // ---------- Public API ----------
+  function start(){
+    resetState();
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(loop);
+  }
+  function stop(){
+    running = false;
+    cancelAnimationFrame(raf);
+  }
+
+  canvas.addEventListener('pointerdown', handlePointerDown);
+  window.addEventListener('keydown', (e)=>{ if(e.code==='Space') jump(); });
+  window.addEventListener('resize', ()=>{ if(ctx) resize(); });
+
+  document.getElementById('go-retry').addEventListener('click', ()=>{ start(); });
+  document.getElementById('go-home').addEventListener('click', ()=>{ stop(); showScreen('home-screen'); document.getElementById('home-coin-count').textContent = GAME.coins; });
+  document.getElementById('go-shop').addEventListener('click', openShop);
+  document.getElementById('shop-close').addEventListener('click', closeShop);
+
+  window.RunnerGame = { start, stop, openShop };
+})();
+
+
+
+// ===== care.js =====
+// ============ Parrot Care Farm ============
+(function(){
+  const canvas = document.getElementById('careCanvas');
+  let ctx, W, H;
+  let raf = null;
+  let frame = 0;
+  let currentTool = 'pet';
+  let selectedParrotId = null;
+  let particles = [];
+  let tickInterval = null;
+  let ambientQuoteInterval = null;
+
+  const PARROT_COLORS = {
+    green:  { body:'#3fc76a', bodyDark:'#1f7a38', belly:'#eaffef', cheek:'#ffe8b8' },
+    blue:   { body:'#3aa0e8', bodyDark:'#1f5f9e', belly:'#eaf6ff', cheek:'#ffffff' },
+    yellow: { body:'#ffd166', bodyDark:'#e0982a', belly:'#fff7e0', cheek:'#ff8fa3' },
+    red:    { body:'#e85454', bodyDark:'#a52d2d', belly:'#fff0e8', cheek:'#ffffff' },
+    purple: { body:'#9b6fd1', bodyDark:'#5e3b8e', belly:'#f3ecff', cheek:'#ffd8e8' },
+    rainbow:{ body:'#ff8fd6', bodyDark:'#c94fa0', belly:'#fffbe8', cheek:'#8fd6ff' },
+    warrior:{ body:'#c0392b', bodyDark:'#7a1f18', belly:'#f5d97a', cheek:'#ffe8b8', warrior:true }
+  };
+  const PARROT_NAMES = ['Кеша','Скай','Манго','Лулу','Пино','Олива','Бирюза','Тути','Азур','Рио'];
+  const WARRIOR_NAME = 'Генерал Чи 🐉';
+
+  function resize(){
+    const r = fitCanvas(canvas);
+    ctx = r.ctx; W = r.w; H = r.h;
+    layoutCages();
+  }
+
+  // ---------- Layout: cages/perches grid ----------
+  let cageSlots = [];
+  function layoutCages(){
+    const n = GAME.parrots.length;
+    const cols = n <= 2 ? n : (n<=4?2:3);
+    const rows = Math.ceil(n/cols);
+    const topPad = H*0.16;
+    const botPad = H*0.16;
+    const availH = H - topPad - botPad;
+    const availW = W*0.9;
+    const cellW = availW/cols;
+    const cellH = Math.min(availH/rows, cellW*1.1);
+    const startX = (W-cellW*cols)/2;
+    cageSlots = [];
+    for(let i=0;i<n;i++){
+      const c = i % cols, r = Math.floor(i/cols);
+      cageSlots.push({
+        x: startX + c*cellW + cellW/2,
+        y: topPad + r*cellH + cellH/2,
+        w: cellW*0.86, h: cellH*0.86
+      });
+    }
+  }
+
+  // ---------- Background: garden / farm ----------
+  function drawBackground(){
+    const grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'#bfe6ff');
+    grad.addColorStop(0.55,'#e8f7ff');
+    grad.addColorStop(1,'#fff8ea');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,W,H);
+
+    // soft sun
+    ctx.save();
+    ctx.globalAlpha=0.5;
+    const g = ctx.createRadialGradient(W*0.85,H*0.1,5,W*0.85,H*0.1,W*0.3);
+    g.addColorStop(0,'#fff4c2'); g.addColorStop(1,'rgba(255,244,194,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    ctx.restore();
+
+    // grass strip bottom
+    const gg = ctx.createLinearGradient(0,H*0.86,0,H);
+    gg.addColorStop(0,'#7fcf7a');
+    gg.addColorStop(1,'#4f9e52');
+    ctx.fillStyle = gg;
+    ctx.fillRect(0,H*0.86,W,H*0.14);
+  }
+
+  // ---------- Draw a cage/perch stand ----------
+  function drawCageStand(slot){
+    ctx.save();
+    ctx.translate(slot.x, slot.y);
+    const w = slot.w, h = slot.h;
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.beginPath();
+    ctx.ellipse(0, h*0.46, w*0.32, h*0.05, 0,0,Math.PI*2);
+    ctx.fill();
+
+    // perch base (wood stand) if cage not bought — simple perch style
+    ctx.strokeStyle = '#a9762f';
+    ctx.lineWidth = w*0.03;
+    ctx.beginPath();
+    ctx.moveTo(-w*0.06,h*0.15); ctx.lineTo(-w*0.06,h*0.42);
+    ctx.moveTo(w*0.06,h*0.15); ctx.lineTo(w*0.06,h*0.42);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-w*0.28,h*0.15); ctx.lineTo(w*0.28,h*0.15);
+    ctx.lineWidth = w*0.035;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function stageScale(stage){
+    if(stage==='baby') return 0.55;
+    if(stage==='teen') return 0.8;
+    return 1.0; // adult
+  }
+
+  // Puff (overfeeding) visual scale: grows gradually as the parrot is
+  // overfed again and again, accelerating near the end so that at puff=1
+  // it looks huge - almost filling the cage/screen - right before the
+  // next feeding covers the whole screen and pops it.
+  function puffScale(parrot){
+    const puff = parrot.puff || 0; // 0..1
+    return 1 + Math.pow(puff, 1.4) * 5.5;
+  }
+
+  // Approximate on-screen position of the parrot's beak/mouth (for the
+  // anime-style speech bubble), matching the head/beak drawn in drawFarmParrot.
+  function beakXY(slot, parrot, bob){
+    const scale = (Math.min(slot.w,slot.h)*0.0075) * stageScale(parrot.stage) * puffScale(parrot);
+    const x = slot.x, y = slot.y + slot.h*0.05 + bob;
+    return { x: x + scale*(-38), y: y + scale*(-18) };
+  }
+
+  function drawFarmParrot(slot, parrot, bob, flap){
+    const skin = PARROT_COLORS[parrot.color] || PARROT_COLORS.green;
+    const scale = (Math.min(slot.w,slot.h)*0.0075) * stageScale(parrot.stage) * puffScale(parrot);
+    const x = slot.x, y = slot.y + slot.h*0.05 + bob;
+
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(scale,scale);
+
+    // Sad/dirty indicators handled by tint
+    const sad = parrot.happy < 35;
+    const dirty = parrot.clean < 35;
+    const hungry = parrot.hunger < 35;
+
+    // Tail
+    ctx.save();
+    ctx.rotate(0.15);
+    ctx.fillStyle = skin.bodyDark;
+    ctx.beginPath();
+    ctx.moveTo(18,-5); ctx.quadraticCurveTo(40,-3,55,4);
+    ctx.quadraticCurveTo(38,8,16,7); ctx.closePath(); ctx.fill();
+    ctx.restore();
+
+    // Body
+    const bodyGrad = ctx.createRadialGradient(-6,-10,4,0,0,32);
+    bodyGrad.addColorStop(0, skin.body);
+    bodyGrad.addColorStop(1, skin.bodyDark);
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath(); ctx.ellipse(0,2,22,26,0,0,Math.PI*2); ctx.fill();
+
+    if(dirty){
+      // dirt specks
+      ctx.fillStyle = 'rgba(90,70,40,0.45)';
+      for(let i=0;i<5;i++){
+        ctx.beginPath();
+        ctx.arc(-10+i*6, 6+((i*7)%14), 2.2, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // Belly
+    ctx.fillStyle = skin.belly;
+    ctx.globalAlpha=0.8;
+    ctx.beginPath(); ctx.ellipse(-2,10,11,15,0,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=1;
+
+    // Wing
+    ctx.save();
+    ctx.translate(2,0);
+    ctx.rotate(Math.sin(flap)*0.25-0.1);
+    ctx.fillStyle = skin.bodyDark;
+    ctx.beginPath();
+    ctx.moveTo(-4,-14); ctx.quadraticCurveTo(18,-10,20,10);
+    ctx.quadraticCurveTo(10,18,-6,14); ctx.closePath(); ctx.fill();
+    ctx.restore();
+
+    // Head
+    ctx.save();
+    ctx.translate(-14,-18);
+    ctx.fillStyle = skin.body;
+    ctx.beginPath(); ctx.arc(0,0,14,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = skin.cheek;
+    ctx.beginPath(); ctx.ellipse(-4,3,7,6,0.1,0,Math.PI*2); ctx.fill();
+    // crest
+    ctx.fillStyle = skin.bodyDark;
+    ctx.beginPath();
+    ctx.moveTo(-2,-13); ctx.quadraticCurveTo(2,-20,6,-14); ctx.quadraticCurveTo(2,-13,-2,-13); ctx.closePath(); ctx.fill();
+    // beak
+    ctx.fillStyle = '#ffb84d';
+    ctx.beginPath();
+    ctx.moveTo(-12,-1); ctx.quadraticCurveTo(-24,2,-13,7); ctx.quadraticCurveTo(-10,3,-6,1); ctx.closePath(); ctx.fill();
+    // eyes
+    if(sad){
+      ctx.strokeStyle='#0b1626'; ctx.lineWidth=1.6;
+      ctx.beginPath(); ctx.arc(-6,0,2.6,Math.PI*0.15,Math.PI*0.85); ctx.stroke();
+    } else {
+      ctx.fillStyle='#0b1626';
+      ctx.beginPath(); ctx.arc(-6,-2,2.4,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fff';
+      ctx.beginPath(); ctx.arc(-5.2,-3,0.9,0,Math.PI*2); ctx.fill();
+    }
+    if(hungry){
+      // small drooping mouth hint via lower beak line - keep subtle, no extra text
+    }
+    ctx.restore();
+
+    // Warrior costume: ancient Chinese armor + helmet, for the legendary streak-reward parrot
+    if(skin.warrior){
+      ctx.save();
+      ctx.translate(-14,-18);
+      // helmet dome
+      ctx.fillStyle = '#d4af37';
+      ctx.beginPath(); ctx.arc(0,-6,11,Math.PI,0); ctx.fill();
+      ctx.fillStyle = '#b8860b';
+      ctx.fillRect(-11,-7,22,3);
+      // helmet spike
+      ctx.beginPath();
+      ctx.moveTo(-1,-17); ctx.lineTo(1,-17); ctx.lineTo(2,-23); ctx.lineTo(-2,-23);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#e74c3c';
+      ctx.beginPath(); ctx.moveTo(0,-23); ctx.quadraticCurveTo(4,-27,2,-30); ctx.quadraticCurveTo(-1,-27,0,-23); ctx.fill();
+      ctx.restore();
+      // shoulder armor plates on the body
+      ctx.save();
+      ctx.fillStyle = '#d4af37';
+      ctx.beginPath(); ctx.ellipse(-10,-2,7,5,0.3,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle = '#7a1f18'; ctx.lineWidth = 1.2;
+      ctx.stroke();
+      ctx.fillStyle = '#f5d97a';
+      ctx.beginPath(); ctx.ellipse(-10,-2,3.2,2.2,0.3,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.restore();
+
+    // status bubbles (small icon if very needy) drawn in screen space (not scaled)
+    if(hungry || dirty || sad){
+      ctx.save();
+      ctx.translate(x, y - slot.h*0.34);
+      ctx.font = `${Math.max(14,slot.w*0.09)}px sans-serif`;
+      ctx.textAlign='center';
+      const icon = hungry ? '🍽️' : dirty ? '💧' : '😢';
+      ctx.fillText(icon, 0, 0);
+      ctx.restore();
+    }
+  }
+
+  function drawToys(slot, parrot){
+    const equipped = (parrot.toys || []).slice(0,5);
+    if(!equipped.length) return;
+    ctx.save();
+    ctx.font = `${slot.w*0.1}px sans-serif`;
+    ctx.textAlign='center';
+    // fan the toys out along the bottom edge of the perch slot
+    const n = equipped.length;
+    const spread = slot.w*0.5;
+    equipped.forEach((toyKey,i)=>{
+      const def = TOY_DEFS[toyKey];
+      if(!def) return;
+      const t = n===1 ? 0.5 : i/(n-1);
+      const tx = slot.x - spread/2 + spread*t;
+      const ty = slot.y + slot.h*0.4;
+      ctx.fillText(def.icon, tx, ty);
+    });
+    ctx.restore();
+  }
+
+  function drawNameTag(slot, parrot){
+    ctx.save();
+    ctx.font = `700 ${Math.max(11,slot.w*0.075)}px 'Baloo 2',sans-serif`;
+    ctx.textAlign='center';
+    ctx.fillStyle = 'rgba(11,30,60,0.55)';
+    const label = `${parrot.name} · ${stageLabel(parrot.stage)}`;
+    ctx.fillText(label, slot.x, slot.y + slot.h*0.5);
+    ctx.restore();
+  }
+
+  function stageLabel(stage){
+    if(stage==='baby') return 'малыш';
+    if(stage==='teen') return 'подросток';
+    return 'взрослый';
+  }
+
+  function drawSelection(slot){
+    ctx.save();
+    ctx.strokeStyle = 'rgba(63,199,106,0.7)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([6,5]);
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(slot.x-slot.w/2, slot.y-slot.h/2, slot.w, slot.h, 18) : ctx.rect(slot.x-slot.w/2, slot.y-slot.h/2, slot.w, slot.h);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function burst(x,y,emoji){
+    const ox = (Math.random()-0.5)*24;
+    particles.push({x:x+ox,y,life:40,emoji,vy:-1.2});
+  }
+
+  function drawParticles(){
+    particles.forEach(p=>{
+      ctx.save();
+      p.y += p.vy;
+      p.life--;
+      ctx.globalAlpha = Math.max(p.life/40,0);
+      ctx.font = '22px sans-serif';
+      ctx.textAlign='center';
+      ctx.fillText(p.emoji, p.x, p.y);
+      ctx.restore();
+    });
+    particles = particles.filter(p=>p.life>0);
+  }
+
+  function loop(){
+    frame++;
+    ctx.clearRect(0,0,W,H);
+    drawBackground();
+    GAME.parrots.forEach((parrot, i)=>{
+      const slot = cageSlots[i];
+      if(!slot) return;
+      drawCageStand(slot);
+      const bob = Math.sin((frame+i*30)*0.05)*4;
+      const flap = (frame+i*20)*0.06;
+      drawFarmParrot(slot, parrot, bob, flap);
+      drawToys(slot, parrot);
+      drawNameTag(slot, parrot);
+      if(parrot.id === selectedParrotId) drawSelection(slot);
+      if(speakingParrotId === parrot.id) updateSpeechBubblePosition(slot, parrot, bob);
+    });
+    drawParticles();
+    raf = requestAnimationFrame(loop);
+  }
+
+  // ---------- Anime-style speech bubble ----------
+  let speakingParrotId = null;
+  let speechBubbleTimer = null;
+  function updateSpeechBubblePosition(slot, parrot, bob){
+    const bubble = document.getElementById('care-speech-bubble');
+    const rect = canvas.getBoundingClientRect();
+    const beak = beakXY(slot, parrot, bob);
+    bubble.style.left = (rect.left + beak.x) + 'px';
+    bubble.style.top = (rect.top + beak.y - 14) + 'px';
+  }
+  function showSpeechBubble(parrot, text){
+    const bubble = document.getElementById('care-speech-bubble');
+    const i = GAME.parrots.findIndex(p=>p.id===parrot.id);
+    const slot = cageSlots[i];
+    if(!slot) return;
+    bubble.textContent = text;
+    speakingParrotId = parrot.id;
+    // position immediately so it doesn't flash at (0,0) before next frame
+    updateSpeechBubblePosition(slot, parrot, Math.sin(frame*0.05)*4);
+    requestAnimationFrame(()=> bubble.classList.add('show'));
+    clearTimeout(speechBubbleTimer);
+    speechBubbleTimer = setTimeout(()=>{
+      bubble.classList.remove('show');
+      speakingParrotId = null;
+    }, 2600);
+  }
+
+  // ---------- Interaction ----------
+  function hitTest(px,py){
+    for(let i=0;i<cageSlots.length;i++){
+      const s = cageSlots[i];
+      if(Math.abs(px-s.x) < s.w/2 && Math.abs(py-s.y) < s.h/2){
+        return GAME.parrots[i];
+      }
+    }
+    return null;
+  }
+
+  function clampStat(v){ return Math.max(0, Math.min(100, v)); }
+
+  function applyTool(parrot){
+    if(!parrot) return;
+    if(parrot.exploding) return; // ignore input while pop-animation plays
+    switch(currentTool){
+      case 'feed':
+        if(parrot.exploding) break;
+        // If already maxed out and puffed to near screen-filling size,
+        // this next feeding is the one that makes it explode.
+        if(parrot.puff >= 1){
+          burst(cageXY(parrot).x, cageXY(parrot).y, '🌾');
+          startOvereatSequence(parrot);
+          break;
+        }
+        // Track overfeeding: feeding a parrot that's already nearly full repeatedly
+        if(parrot.hunger >= 95){
+          parrot.overfeedCount = (parrot.overfeedCount||0) + 1;
+          // Puff up gradually with each extra feeding - a slow, visible build-up
+          // until it's huge (almost filling the screen) rather than an instant jump.
+          parrot.puff = Math.min(1, (parrot.puff||0) + 0.14);
+        } else {
+          parrot.overfeedCount = 0;
+        }
+        parrot.hunger = clampStat(parrot.hunger + 30);
+        burst(cageXY(parrot).x, cageXY(parrot).y, '🌾');
+        playSound('feed');
+
+        if(parrot.puff >= 1){
+          // Reached max puff size - huge and about to fill the cage/screen.
+          // Warn the player: the NEXT feeding will make it explode.
+          showToast(`${parrot.name} огромный и еле помещается! Ещё одно кормление — и он лопнет! 💥`);
+        } else if(parrot.overfeedCount >= 1){
+          // getting visibly puffier with each extra feeding - fair warning to the player
+          showToast(overfeedWarning(parrot.overfeedCount));
+        } else {
+          if(Math.random()<0.35) showSpeechBubble(parrot, randomParrotQuote());
+          else showToast(`${parrot.name} поел с аппетитом! 😋`);
+          maybeGrow(parrot);
+          questProgress('feed');
+          questProgress('allcare');
+        }
+        break;
+      case 'clean':
+        parrot.clean = clampStat(parrot.clean + 35);
+        burst(cageXY(parrot).x, cageXY(parrot).y, '✨');
+        playSound('clean');
+        questProgress('clean');
+        questProgress('allcare');
+        if(Math.random()<0.3) showSpeechBubble(parrot, randomParrotQuote());
+        else showToast(`${parrot.name} теперь чистый и блестящий! ✨`);
+        break;
+      case 'play':
+        parrot.happy = clampStat(parrot.happy + 25);
+        burst(cageXY(parrot).x, cageXY(parrot).y, '🎉');
+        playSound('play');
+        questProgress('play');
+        questProgress('allcare');
+        if(Math.random()<0.3) showSpeechBubble(parrot, randomParrotQuote());
+        else showToast(`${parrot.name} с удовольствием поиграл! 🎾`);
+        break;
+      case 'pet':
+        parrot.happy = clampStat(parrot.happy + 12);
+        burst(cageXY(parrot).x, cageXY(parrot).y, '💚');
+        playSound('pet');
+        questProgress('pet');
+        questProgress('allcare');
+        if(Math.random()<0.3) showSpeechBubble(parrot, randomParrotQuote());
+        else showToast(`${parrot.name} любит ласку 🥰`);
+        break;
+      default: return;
+    }
+    persist();
+    updateStatusHud();
+  }
+
+  function overfeedWarning(count){
+    const warnings = [
+      'Пампам, я уже наелся, но... ладно, ещё немного не помешает 🙄',
+      'Зара, я начинаю чувствовать себя воздушным шариком...',
+      'Пампам, если я стану ещё круглее, придётся сдувать через клюв.'
+    ];
+    return warnings[Math.min(count-1, warnings.length-1)];
+  }
+
+  // Special sassy lines for the overfeeding "explosion" moment
+  const OVEREAT_QUOTES = [
+    'Пампам, ты серьёзно?! Ещё одна крошка — и я лопну от твоей щедрости!',
+    'Зара, хватит! Я не бездонная бочка, я гордая птица с пределами!',
+    'Пампам, предупреждал же — переел! Теперь начинаю жизнь заново, спасибо тебе большое.',
+    'Зара, это было слишком даже для меня, а я люблю преувеличивать.'
+  ];
+
+  // ---------- Overeat sequence ----------
+  // The parrot puffs up gradually with each extra feeding (see puffScale)
+  // until it's huge - almost filling the cage/screen. Feeding it once more
+  // at that point covers the whole screen for a dramatic moment, then it
+  // pops and comes back small (baby) again.
+  let overeatOverlay = null;
+
+  function startOvereatSequence(parrot){
+    parrot.exploding = true;
+    playSound('grow');
+    const el = document.createElement('div');
+    el.style.cssText = `
+      position:absolute; inset:0; z-index:70;
+      display:flex; align-items:center; justify-content:center;
+      pointer-events:none; overflow:hidden;
+    `;
+    const emoji = document.createElement('div');
+    emoji.textContent = '🦜';
+    emoji.style.cssText = `
+      font-size:40px; transform:scale(1);
+      transition:transform 1.1s cubic-bezier(.34,1.2,.64,1), filter 1.1s ease;
+      filter:drop-shadow(0 0 0 rgba(0,0,0,0));
+    `;
+    el.appendChild(emoji);
+    document.getElementById('care-screen').appendChild(el);
+    overeatOverlay = el;
+
+    // grow to fully cover the screen
+    requestAnimationFrame(()=>{
+      const targetSize = Math.max(window.innerWidth, window.innerHeight) * 2.4;
+      emoji.style.fontSize = targetSize + 'px';
+      emoji.style.filter = 'drop-shadow(0 0 40px rgba(255,209,102,0.6))';
+    });
+
+    setTimeout(()=>{
+      // POP moment
+      playSound('pop');
+      el.style.transition = 'opacity .15s ease';
+      el.style.opacity = '0';
+      const xy = cageXY(parrot);
+      for(let i=0;i<4;i++) burst(xy.x, xy.y, '💥');
+      burst(xy.x, xy.y, '🫧');
+      burst(xy.x, xy.y, '🪶');
+      showToast(OVEREAT_QUOTES[Math.floor(Math.random()*OVEREAT_QUOTES.length)]);
+
+      // reset the parrot back to a baby - "born again" after popping
+      parrot.stage = 'baby';
+      parrot.age = 0;
+      parrot.overfeedCount = 0;
+      parrot.puff = 0;
+      parrot.hunger = 55;
+      parrot.happy = 50;
+      parrot.clean = 60;
+      parrot.exploding = false;
+      persist();
+      updateStatusHud();
+
+      setTimeout(()=>{ el.remove(); if(overeatOverlay===el) overeatOverlay = null; }, 200);
+    }, 1250);
+  }
+
+  function cageXY(parrot){
+    const idx = GAME.parrots.findIndex(p=>p.id===parrot.id);
+    return cageSlots[idx] || {x:W/2,y:H/2};
+  }
+
+  function maybeGrow(parrot){
+    parrot.age = (parrot.age||0) + 1;
+    if(parrot.stage==='baby' && parrot.age >= 4){ parrot.stage='teen'; showToast(`${parrot.name} немного подрос! 🌱`); }
+    else if(parrot.stage==='teen' && parrot.age >= 9){ parrot.stage='adult'; showToast(`${parrot.name} стал взрослым! 🦜`); }
+  }
+
+  function handlePointerDown(e){
+    if(document.getElementById('care-shop-panel').classList.contains('show')) return;
+    const rect = canvas.getBoundingClientRect();
+    const px = (e.clientX - rect.left);
+    const py = (e.clientY - rect.top);
+    const parrot = hitTest(px,py);
+    if(currentTool === 'shop'){
+      openToyShop();
+      return;
+    }
+    if(currentTool === 'expand'){
+      buyNewParrot();
+      return;
+    }
+    if(parrot){
+      selectedParrotId = parrot.id;
+      applyTool(parrot);
+      updateInfoPanel(parrot);
+    }
+  }
+
+  function updateInfoPanel(parrot){
+    const panel = document.getElementById('care-info-panel');
+    if(!parrot){ panel.classList.remove('show'); return; }
+    let text = `${parrot.name} — голод:${parrot.hunger|0}% чистота:${parrot.clean|0}% радость:${parrot.happy|0}%`;
+    if(parrot.puff > 0){
+      text += ` · переваривает 🫃 ${Math.round(parrot.puff*100)}%`;
+    }
+    panel.textContent = text;
+    panel.classList.add('show');
+  }
+
+  function updateStatusHud(){
+    const p = GAME.parrots.find(p=>p.id===selectedParrotId) || GAME.parrots[0];
+    if(p){
+      document.getElementById('care-happy-hud').textContent = Math.round(p.happy)+'%';
+      document.getElementById('care-hunger-hud').textContent = Math.round(p.hunger)+'%';
+      updateInfoPanel(selectedParrotId ? p : null);
+    }
+    document.getElementById('care-coin-hud').textContent = GAME.coins;
+  }
+
+  // ---------- Buy new parrot (expand farm) ----------
+  function buyNewParrot(){
+    const price = 25 + GAME.parrots.length*15;
+    if(GAME.parrots.length >= 9){
+      showToast('Ферма заполнена! 🏡');
+      return;
+    }
+    if(GAME.coins < price){
+      showToast(`Нужно ${price} монет для нового попугая 🪙`);
+      return;
+    }
+    GAME.coins -= price;
+    const colors = Object.keys(PARROT_COLORS).filter(c=>c!=='warrior');
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const name = PARROT_NAMES[Math.floor(Math.random()*PARROT_NAMES.length)];
+    const id = Date.now();
+    GAME.parrots.push({ id, name, color, hunger:70, happy:70, clean:70, stage:'baby', age:0, overfeedCount:0, puff:0, toys:[] });
+    persist();
+    questProgress('newparrot');
+    layoutCages();
+    updateStatusHud();
+    showToast(`Добро пожаловать, ${name}! 🐣`);
+  }
+
+  // ---------- Toy shop ----------
+  function closeToyShop(){
+    document.getElementById('care-shop-panel').classList.remove('show');
+  }
+
+  // Toys are bought once into a shared chest (GAME.ownedToys). Any owned toy can be
+  // equipped on any parrot at any time, up to MAX_EQUIPPED_TOYS per parrot.
+  function openToyShop(){
+    const p = GAME.parrots.find(p=>p.id===selectedParrotId) || GAME.parrots[0];
+    if(!p){ return; }
+    if(!p.toys) p.toys = [];
+    const grid = document.getElementById('care-skin-grid');
+    const panel = document.getElementById('care-shop-panel');
+    panel.classList.add('show');
+    grid.innerHTML = '';
+    document.getElementById('care-shop-title').textContent = `🛒 Сундук игрушек — ${p.name}`;
+    document.getElementById('care-shop-sub').textContent = `Надето: ${p.toys.length}/${MAX_EQUIPPED_TOYS} · Купленные игрушки остаются у вас навсегда`;
+    Object.keys(TOY_DEFS).forEach(key=>{
+      const t = TOY_DEFS[key];
+      const owned = GAME.ownedToys.includes(key);
+      const equipped = p.toys.includes(key);
+      const el = document.createElement('div');
+      el.className = 'skin-item' + (equipped?' selected':'') + (!owned && GAME.coins<t.price?' locked':'');
+      let btnLabel = 'Купить';
+      let btnClass = 'buy';
+      if(owned){
+        btnLabel = equipped ? 'Снять' : 'Надеть';
+        btnClass = equipped ? 'owned' : 'use';
+      }
+      el.innerHTML = `
+        <div style="font-size:30px;">${t.icon}</div>
+        <div class="skin-name">${t.label}</div>
+        ${owned ? '' : `<div class="skin-price">🪙 ${t.price}</div>`}
+        <button class="skin-btn ${btnClass}">${btnLabel}</button>
+      `;
+      el.querySelector('.skin-btn').addEventListener('click', ()=>{
+        if(!owned){
+          if(GAME.coins < t.price){ showToast('Недостаточно монет 🪙'); return; }
+          GAME.coins -= t.price;
+          GAME.ownedToys.push(key);
+          persist();
+          playSound('coinShop');
+          showToast(`Игрушка куплена и добавлена в сундук! ${t.icon}`);
+          questProgress('toy');
+          openToyShop();
+          updateStatusHud();
+          return;
+        }
+        if(equipped){
+          p.toys = p.toys.filter(k=>k!==key);
+          persist();
+          openToyShop();
+          return;
+        }
+        if(p.toys.length >= MAX_EQUIPPED_TOYS){
+          showToast(`Можно надеть максимум ${MAX_EQUIPPED_TOYS} игрушек 🧸`);
+          return;
+        }
+        p.toys.push(key);
+        p.happy = clampStat(p.happy+12);
+        persist();
+        updateStatusHud();
+        playSound('pet');
+        showToast(`${p.name} обожает эту игрушку! ${t.icon}`);
+        if(p.toys.length >= MAX_EQUIPPED_TOYS) questProgress('toyworn', p.toys.length);
+        openToyShop();
+      });
+      grid.appendChild(el);
+    });
+  }
+
+  // ---------- Sell parrot: price depends on rarity + stats/specs ----------
+  const SKIN_RARITY_MULT = { green:1, blue:1.1, yellow:1.1, red:1.25, purple:1.5, rainbow:2, warrior:4 };
+  const STAGE_MULT = { baby:0.6, teen:0.85, adult:1.15 };
+
+  function calcSellPrice(p){
+    const base = 20;
+    const rarityMult = SKIN_RARITY_MULT[p.color] || 1;
+    const stageMult = STAGE_MULT[p.stage] || 1;
+    const careScore = ((p.happy||0) + (p.hunger||0) + (p.clean||0)) / 300; // 0..1
+    const careMult = 0.6 + careScore*0.6; // 0.6..1.2
+    const toyBonus = ((p.toys||[]).length) * 3;
+    const price = Math.round((base*rarityMult*stageMult*careMult) + toyBonus);
+    return { price: Math.max(8,price), rarityMult, stageMult, careMult, toyBonus };
+  }
+
+  function openSellPanel(){
+    const p = GAME.parrots.find(p=>p.id===selectedParrotId) || GAME.parrots[0];
+    if(!p){ return; }
+    if(GAME.parrots.length <= 1){
+      showToast('Нельзя продать последнего попугая 🐣');
+      return;
+    }
+    const calc = calcSellPrice(p);
+    document.getElementById('sell-parrot-name').textContent = `${p.name} · ${stageLabel(p.stage)}${p.legendary?' · 🐉 Легендарный':''}`;
+    document.getElementById('sell-price').textContent = `${calc.price} 🪙`;
+    document.getElementById('sell-breakdown').innerHTML = `
+      Редкость: ×${calc.rarityMult}<br>
+      Возраст: ×${calc.stageMult}<br>
+      Уход (сытость/чистота/радость): ×${calc.careMult.toFixed(2)}<br>
+      Игрушки на попугае: +${calc.toyBonus} 🪙
+    `;
+    document.getElementById('sell-panel').classList.add('show');
+    document.getElementById('sell-confirm').onclick = ()=>{
+      const idx = GAME.parrots.findIndex(pp=>pp.id===p.id);
+      if(idx<0) return;
+      GAME.parrots.splice(idx,1);
+      GAME.coins += calc.price;
+      if(selectedParrotId===p.id) selectedParrotId = GAME.parrots[0] ? GAME.parrots[0].id : null;
+      persist();
+      layoutCages();
+      updateStatusHud();
+      document.getElementById('sell-panel').classList.remove('show');
+      showToast(`Попугай продан за ${calc.price} 🪙`);
+    };
+  }
+  function closeSellPanel(){
+    document.getElementById('sell-panel').classList.remove('show');
+  }
+
+  // ---------- Tool bar wiring ----------
+  let toolbarWired = false;
+  function wireToolbar(){
+    if(toolbarWired) return;
+    toolbarWired = true;
+    document.querySelectorAll('.tool-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        if(btn.dataset.tool==='quests'){ openQuestPanel(); return; }
+        if(btn.dataset.tool==='sell'){ openSellPanel(); return; }
+        document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active-tool'));
+        btn.classList.add('active-tool');
+        currentTool = btn.dataset.tool;
+        if(currentTool === 'shop'){ openToyShop(); }
+        if(currentTool === 'expand'){ buyNewParrot(); }
+      });
+    });
+  }
+
+  // ---------- Passive stat decay over real time ----------
+  function applyOfflineDecay(){
+    const now = Date.now();
+    const last = GAME.lastTick || now;
+    const minutesPassed = Math.max(0,(now-last)/60000);
+    const decay = Math.min(minutesPassed*0.6, 60); // cap decay
+    GAME.parrots.forEach(p=>{
+      p.hunger = clampStat(p.hunger - decay);
+      p.clean = clampStat(p.clean - decay*0.7);
+      p.happy = clampStat(p.happy - decay*0.5);
+    });
+    GAME.lastTick = now;
+    persist();
+  }
+
+  function startTicking(){
+    clearInterval(tickInterval);
+    tickInterval = setInterval(()=>{
+      GAME.parrots.forEach(p=>{
+        p.hunger = clampStat(p.hunger - 0.4);
+        p.clean = clampStat(p.clean - 0.25);
+        p.happy = clampStat(p.happy - 0.2);
+      });
+      GAME.lastTick = Date.now();
+      persist();
+      updateStatusHud();
+    }, 4000);
+
+    clearInterval(ambientQuoteInterval);
+    ambientQuoteInterval = setInterval(()=>{
+      if(document.getElementById('care-screen').classList.contains('active') && GAME.parrots.length){
+        const p = GAME.parrots[Math.floor(Math.random()*GAME.parrots.length)];
+        showSpeechBubble(p, randomParrotQuote());
+      }
+    }, 16000 + Math.random()*6000);
+  }
+
+  // ---------- Public API ----------
+  function start(){
+    applyOfflineDecay();
+    resize();
+    if(!selectedParrotId && GAME.parrots[0]) selectedParrotId = GAME.parrots[0].id;
+    wireToolbar();
+    document.querySelector('.tool-btn[data-tool="pet"]').classList.add('active-tool');
+    updateStatusHud();
+    cancelAnimationFrame(raf);
+    loop();
+    startTicking();
+  }
+  function stop(){
+    cancelAnimationFrame(raf);
+    clearInterval(tickInterval);
+    clearInterval(ambientQuoteInterval);
+    clearTimeout(speechBubbleTimer);
+    document.getElementById('care-speech-bubble').classList.remove('show');
+    speakingParrotId = null;
+    closeToyShop();
+    GAME.lastTick = Date.now();
+    persist();
+  }
+
+  canvas.addEventListener('pointerdown', handlePointerDown);
+  window.addEventListener('resize', ()=>{ if(ctx) resize(); });
+  const careShopCloseBtn = document.getElementById('care-shop-close');
+  if(careShopCloseBtn) careShopCloseBtn.addEventListener('click', closeToyShop);
+
+  window.CareGame = { start, stop };
+})();
+
+
+// ===== main.js =====
+// ============ Main wiring: navigation between screens ============
+(function(){
+  function refreshHomeCoins(){
+    document.getElementById('home-coin-count').textContent = GAME.coins;
+    const streakEl = document.getElementById('home-streak-count');
+    if(streakEl) streakEl.textContent = GAME.streak;
+  }
+
+  function goHome(){
+    if(window.RunnerGame) window.RunnerGame.stop();
+    if(window.CareGame) window.CareGame.stop();
+    showScreen('home-screen');
+    refreshHomeCoins();
+    if(window.HomeBG) window.HomeBG.start();
+  }
+
+  function goRunner(){
+    if(window.HomeBG) window.HomeBG.stop();
+    showScreen('runner-screen');
+    document.getElementById('runner-gameover').classList.remove('show');
+    window.RunnerGame.start();
+  }
+
+  function goCare(){
+    if(window.HomeBG) window.HomeBG.stop();
+    showScreen('care-screen');
+    window.CareGame.start();
+  }
+
+  document.getElementById('btn-runner').addEventListener('click', goRunner);
+  document.getElementById('btn-care').addEventListener('click', goCare);
+  const streakBadge = document.getElementById('streak-badge');
+  if(streakBadge) streakBadge.addEventListener('click', ()=>{
+    renderDailyPanel(Math.max(1, GAME.streak));
+    document.getElementById('daily-panel').classList.add('show');
+    const btn = document.getElementById('daily-claim-btn');
+    // Re-clicking the badge just re-shows today's progress; only offer a
+    // claim action if today's reward hasn't been claimed yet.
+    const today = todayStr();
+    if(GAME.lastLoginDay === today){
+      btn.style.display = 'none';
+    } else {
+      btn.style.display = '';
+      btn.onclick = ()=> claimDailyReward(Math.max(1, GAME.streak));
+    }
+  });
+  document.getElementById('runner-back').addEventListener('click', goHome);
+  document.getElementById('care-back').addEventListener('click', goHome);
+
+  // Quest panel close button (lives on the care screen but wired globally now)
+  const questCloseBtn = document.getElementById('quest-close');
+  if(questCloseBtn) questCloseBtn.addEventListener('click', closeQuestPanel);
+  const sellCancelBtn = document.getElementById('sell-cancel');
+  if(sellCancelBtn) sellCancelBtn.addEventListener('click', ()=> document.getElementById('sell-panel').classList.remove('show'));
+
+  // prevent iOS bounce / pinch zoom
+  document.addEventListener('touchmove', function(e){
+    if(e.touches.length > 1) e.preventDefault();
+  }, {passive:false});
+  document.addEventListener('gesturestart', function(e){ e.preventDefault(); });
+
+  // init
+  window.addEventListener('load', ()=>{
+    refreshHomeCoins();
+    window.HomeBG.start();
+    maybeShowDailyPanel();
+    refreshHomeCoins();
+  });
+})();
+
+// ===== PWA: تسجيل Service Worker لتفعيل التثبيت والعمل بدون إنترنت =====
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{
+      // فشل التسجيل (مثلاً عند الفتح من ملف محلي file://) — اللعبة تعمل عادي بدون هذه الميزة
+    });
+  });
+}
+
+</script>
+</body>
+</html>
